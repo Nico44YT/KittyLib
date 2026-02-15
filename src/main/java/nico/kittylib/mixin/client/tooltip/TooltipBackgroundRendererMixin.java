@@ -17,14 +17,12 @@ public abstract class TooltipBackgroundRendererMixin {
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private static void kittylib$render(DrawContext context, int x, int y, int width, int height, int z, CallbackInfo ci) {
         ItemStack stack = KittyLibClientMixinFlags.tooltipItemStack;
-        if (stack != null && !stack.isEmpty()) {
-            KittyLibTooltipRenderer renderer = ImplementedTooltipRendererRegistry.getTooltipRenderers().getOrDefault(stack.getItem(), null);
-            if (renderer != null) {
-                renderer.render(stack, new KittyLibDrawContext(context), x, y, width, height, z);
-                ci.cancel();
-            }
-        }
+        if(stack == null || stack.isEmpty()) return;
 
-        KittyLibClientMixinFlags.tooltipItemStack = null;
+        KittyLibTooltipRenderer renderer = ImplementedTooltipRendererRegistry.getTooltipRenderers().getOrDefault(stack.getItem(), null);
+        if (renderer != null) {
+            renderer.render(stack, new KittyLibDrawContext(context), x, y, width, height, z);
+            ci.cancel();
+        }
     }
 }
