@@ -22,7 +22,7 @@ public abstract class TexturedRenderLayersMixin {
     public static Identifier SIGNS_ATLAS_TEXTURE;
 
     @Inject(method = "addDefaultTextures", at = @At("TAIL"))
-    private static void vanity$addSignTextures(Consumer<SpriteIdentifier> adder, CallbackInfo ci) {
+    private static void kittylib$addSignTextures(Consumer<SpriteIdentifier> adder, CallbackInfo ci) {
         Registries.BLOCK.forEach(block -> {
             if(block instanceof KittyLibSign sign) {
                 adder.accept(new SpriteIdentifier(SIGNS_ATLAS_TEXTURE, sign.getTexture()));

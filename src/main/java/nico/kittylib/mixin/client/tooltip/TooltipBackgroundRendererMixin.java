@@ -25,5 +25,6 @@ public abstract class TooltipBackgroundRendererMixin {
             }
         }
 
+        KittyLibClientMixinFlags.tooltipItemStack = null;
     }
 }
