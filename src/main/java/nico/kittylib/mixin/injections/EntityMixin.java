@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements KittyLibInjectedMethods, KittyLibIdentifierResolvable {
+public abstract class EntityMixin implements KittyLibInjectedMethods<Entity>, KittyLibIdentifierResolvable {
     @Shadow public abstract EntityType<?> getType();
 
     @Override
@@ -19,6 +19,17 @@ public abstract class EntityMixin implements KittyLibInjectedMethods, KittyLibId
         for (Class<?> aClass : classes) {
             if(aClass.isInstance(thisEntity)) return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean kittylib$isOfAny(Entity... types) {
+        Entity thisEntity = (Entity)(Object)this;
+
+        for(Entity entity : types) {
+            if(entity == thisEntity) return true;
+        }
+
         return false;
     }
 

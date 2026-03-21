@@ -30,8 +30,6 @@ public abstract class DrawContextMixin {
                 renderer.renderText(instance, textRenderer, x, y, matrix, vertexConsumers);
                 return;
             }
-
-            KittyLibClientMixinFlags.tooltipItemStack = null;
         }
 
         original.call(instance, textRenderer, x, y, matrix, vertexConsumers);

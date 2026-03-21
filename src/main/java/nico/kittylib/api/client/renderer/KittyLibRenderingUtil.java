@@ -10,6 +10,70 @@ import org.joml.Matrix4f;
 import java.util.List;
 
 public class KittyLibRenderingUtil {
+    public static class Faces {
+        public static final double[] FRONT = { // FRONT (z = 1)
+                0, 0, 1,
+                1, 0, 1,
+                1, 1, 1,
+                0, 1, 1
+        };
+
+        public static final double[] BACK = { // BACK (z = 0)
+                1, 0, 0,
+                0, 0, 0,
+                0, 1, 0,
+                1, 1, 0
+        };
+
+        public static final double[] LEFT = { // LEFT (x = 0)
+                0, 0, 0,
+                0, 0, 1,
+                0, 1, 1,
+                0, 1, 0
+        };
+
+        public static final double[] RIGHT = { // RIGHT (x = 1)
+                1, 0, 1,
+                1, 0, 0,
+                1, 1, 0,
+                1, 1, 1
+        };
+
+        public static final double[] TOP = { // TOP (y = 1)
+                0, 1, 1,
+                1, 1, 1,
+                1, 1, 0,
+                0, 1, 0,
+        };
+
+        public static final double[] BOTTOM = {
+                0, 0, 0,
+                1, 0, 0,
+                1, 0, 1,
+                0, 0, 1
+        };
+
+    }
+
+    public static void renderFaces(MatrixStack matrixStack, VertexConsumer buffer, int[] rgba, int overlay, int light, double[]... faces) {
+        renderFaces(matrixStack, buffer, rgba, overlay, light, 0, 0, 1, 1, faces);
+    }
+
+    public static void renderFaces(MatrixStack matrixStack, VertexConsumer buffer, int[] rgba, int overlay, int light, float minU, float minV, float maxU, float maxV, double[]... faces) {
+        Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
+        Matrix3f normalMatrix = matrixStack.peek().getNormalMatrix();
+
+        for (int i = 0; i < faces.length; i++) {
+            renderQuad(positionMatrix, normalMatrix, buffer,
+                    faces[i],
+                    minU, minV,
+                    maxU, maxV,
+                    light, overlay,
+                    rgba
+            );
+        }
+    }
+
     /***
      * Renders a cube. If the cube only renders black because of the uv cords try calling renderCube with flipV
      * @see #renderCube(MatrixStack, VertexConsumer, int[], int, int, float, float, float, float, boolean)
@@ -84,6 +148,38 @@ public class KittyLibRenderingUtil {
         }
     }
 
+    public static void renderQuad(Matrix4f positionMatrix, Matrix3f normalMatrix, VertexConsumer buffer, double[] vertexes, float uMin, float vMin, float uMax, float vMax, int light, int overlay, int[] rgba) {
+        // Front triangle
+        assembleFace(
+                new double[]{
+                        vertexes[0], vertexes[1], vertexes[2], // Vertex 0
+                        vertexes[3], vertexes[4], vertexes[5], // Vertex 1
+                        vertexes[6], vertexes[7], vertexes[8], // Vertex 2
+                },
+                new float[]{
+                        uMin, vMin,
+                        uMax, vMin,
+                        uMax, vMax
+                }
+        ).render(buffer, positionMatrix, normalMatrix, light, overlay, rgba, new boolean[]{false, false, false});
+
+        // Back triangle
+        // new Vec3d[]{vertexes[0].multiply(1, 1, -1), vertexes[3].multiply(1, 1, -1), vertexes[2].multiply(1, 1, -1)},
+        assembleFace(
+                new double[]{
+                        vertexes[0] * 1, vertexes[1] * 1, vertexes[2] * -1, // Vertex 0 Flipped
+                        vertexes[9] * 1, vertexes[10] * 1, vertexes[11] * -1, // Vertex 3 Flipped
+                        vertexes[6] * 1, vertexes[7] * 1, vertexes[8] * -1, // Vertex 2 Flipped
+
+                },
+                new float[]{
+                        uMin, vMin,
+                        uMin, vMax,
+                        uMax, vMax
+                }
+        ).render(buffer, positionMatrix, normalMatrix, light, overlay, rgba, new boolean[]{false, false, true});
+    }
+
     public static void renderQuad(Matrix4f positionMatrix, Matrix3f normalMatrix, VertexConsumer buffer, Vec3d[] vertexes, float uMin, float vMin, float uMax, float vMax, int light, int overlay, int[] rgba) {
         // Front triangle
         assembleFace(
@@ -104,6 +200,21 @@ public class KittyLibRenderingUtil {
                         new Vec2f(uMax, vMax)
                 }
         ).render(buffer, positionMatrix, normalMatrix, light, overlay, rgba, new boolean[]{false, false, true});
+    }
+
+    public static KittyLibFace assembleFace(double[] vertexes, float[] texCoords) {
+        Vec3d[] vertices = new Vec3d[4];
+        Vec2f[] texes = new Vec2f[2];
+
+        for (int i = 0; i < vertexes.length; i+=4) {
+            vertices[i/4] = new Vec3d(vertexes[i], vertexes[i+1], vertexes[i+2]);
+        }
+
+        for (int i = 0; i < texCoords.length; i+=2) {
+            texes[i/2] = new Vec2f(texCoords[i], texCoords[i+1]);
+        }
+
+        return assembleFace(vertices, texes);
     }
 
     public static KittyLibFace assembleFace(Vec3d[] vertexes, Vec2f[] texCoords) {

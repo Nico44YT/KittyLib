@@ -2,7 +2,7 @@ package nico.kittylib.api.math;
 
 import org.joml.Vector3d;
 
-public class ShapeHelper {
+public class KittyLibShapeHelper {
     public static Vector3d circle(Vector3d startingPosition, int point, int maxPoints, double radiusX, double radiusY, double radiusZ) {
         double angle = 2d * Math.PI * point / maxPoints;
         double x = startingPosition.x + radiusX * Math.cos(angle);
