@@ -2,12 +2,8 @@ package nico.kittylib.api.client.renderer;
 
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-
-import java.util.List;
 
 public class KittyLibRenderingUtil {
     public static class Faces {
@@ -46,7 +42,7 @@ public class KittyLibRenderingUtil {
                 0, 1, 0,
         };
 
-        public static final double[] BOTTOM = {
+        public static final double[] BOTTOM = { // BOTTOM (y = 0)
                 0, 0, 0,
                 1, 0, 0,
                 1, 0, 1,
@@ -66,80 +62,6 @@ public class KittyLibRenderingUtil {
         for (int i = 0; i < faces.length; i++) {
             renderQuad(positionMatrix, normalMatrix, buffer,
                     faces[i],
-                    minU, minV,
-                    maxU, maxV,
-                    light, overlay,
-                    rgba
-            );
-        }
-    }
-
-    /***
-     * Renders a cube. If the cube only renders black because of the uv cords try calling renderCube with flipV
-     * @see #renderCube(MatrixStack, VertexConsumer, int[], int, int, float, float, float, float, boolean)
-     * @param matrixStack
-     * @param buffer
-     * @param rgba
-     * @param overlay
-     * @param light
-     * @param minU
-     * @param minV
-     * @param maxU
-     * @param maxV
-     */
-    public static void renderCube(MatrixStack matrixStack, VertexConsumer buffer, int[] rgba, int overlay, int light, float minU, float minV, float maxU, float maxV) {
-        renderCube(matrixStack, buffer, rgba, overlay, light, minU, minV, maxU, maxV, false);
-    }
-
-    public static void renderCube(MatrixStack matrixStack, VertexConsumer buffer, int[] rgba, int overlay, int light, float minU, float minV, float maxU, float maxV, boolean flipV) {
-        Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
-        Matrix3f normalMatrix = matrixStack.peek().getNormalMatrix();
-
-        minV *= flipV ? -1 : 1;
-        maxV *= flipV ? -1 : 1;
-
-        List<Vec3d> vertexes = List.of(
-                // FRONT (z = 1)
-                new Vec3d(0, 0, 1),
-                new Vec3d(1, 0, 1),
-                new Vec3d(1, 1, 1),
-                new Vec3d(0, 1, 1),
-                // BACK (z = 0)
-                new Vec3d(1, 0, 0),
-                new Vec3d(0, 0, 0),
-                new Vec3d(0, 1, 0),
-                new Vec3d(1, 1, 0),
-                // LEFT (x = 0)
-                new Vec3d(0, 0, 0),
-                new Vec3d(0, 0, 1),
-                new Vec3d(0, 1, 1),
-                new Vec3d(0, 1, 0),
-                // RIGHT (x = 1)
-                new Vec3d(1, 0, 1),
-                new Vec3d(1, 0, 0),
-                new Vec3d(1, 1, 0),
-                new Vec3d(1, 1, 1),
-                // TOP (y = 1)
-                new Vec3d(0, 1, 1),
-                new Vec3d(1, 1, 1),
-                new Vec3d(1, 1, 0),
-                new Vec3d(0, 1, 0),
-                // BOTTOM (y = 0)
-                new Vec3d(0, 0, 0),
-                new Vec3d(1, 0, 0),
-                new Vec3d(1, 0, 1),
-                new Vec3d(0, 0, 1)
-        );
-
-        for (int i = 0; i < vertexes.size(); i+=4) {
-            renderQuad(positionMatrix, normalMatrix, buffer,
-                    new Vec3d[]{
-                            vertexes.get(i),
-                            vertexes.get(i + 1),
-                            vertexes.get(i + 2),
-                            vertexes.get(i + 3)
-
-                    },
                     minU, minV,
                     maxU, maxV,
                     light, overlay,
@@ -180,57 +102,65 @@ public class KittyLibRenderingUtil {
         ).render(buffer, positionMatrix, normalMatrix, light, overlay, rgba, new boolean[]{false, false, true});
     }
 
-    public static void renderQuad(Matrix4f positionMatrix, Matrix3f normalMatrix, VertexConsumer buffer, Vec3d[] vertexes, float uMin, float vMin, float uMax, float vMax, int light, int overlay, int[] rgba) {
-        // Front triangle
-        assembleFace(
-                new Vec3d[]{vertexes[0], vertexes[1], vertexes[2]},
-                new Vec2f[]{
-                        new Vec2f(uMin, vMin),
-                        new Vec2f(uMax, vMin),
-                        new Vec2f(uMax, vMax)
-                }
-        ).render(buffer, positionMatrix, normalMatrix, light, overlay, rgba, new boolean[]{false, false, false});
-
-        // Back triangle
-        assembleFace(
-                new Vec3d[]{vertexes[0].multiply(1, 1, -1), vertexes[3].multiply(1, 1, -1), vertexes[2].multiply(1, 1, -1)},
-                new Vec2f[]{
-                        new Vec2f(uMin, vMin),
-                        new Vec2f(uMin, vMax),
-                        new Vec2f(uMax, vMax)
-                }
-        ).render(buffer, positionMatrix, normalMatrix, light, overlay, rgba, new boolean[]{false, false, true});
-    }
-
     public static KittyLibFace assembleFace(double[] vertexes, float[] texCoords) {
-        Vec3d[] vertices = new Vec3d[4];
-        Vec2f[] texes = new Vec2f[2];
-
-        for (int i = 0; i < vertexes.length; i+=4) {
-            vertices[i/4] = new Vec3d(vertexes[i], vertexes[i+1], vertexes[i+2]);
-        }
-
-        for (int i = 0; i < texCoords.length; i+=2) {
-            texes[i/2] = new Vec2f(texCoords[i], texCoords[i+1]);
-        }
-
-        return assembleFace(vertices, texes);
-    }
-
-    public static KittyLibFace assembleFace(Vec3d[] vertexes, Vec2f[] texCoords) {
-        KittyLibTriangleData[] triangles = new KittyLibTriangleData[vertexes.length + 1];
+        KittyLibTriangleData[] triangles = new KittyLibTriangleData[(vertexes.length/3) + 1];
 
         // Compute face normal using cross product
-        Vec3d edge1 = vertexes[1].subtract(vertexes[0]);
-        Vec3d edge2 = vertexes[2].subtract(vertexes[0]);
-        Vec3d normal = edge1.crossProduct(edge2).normalize();
+        double[] edge1 = new double[]{ // Subtract vertex 1 from 0
+                vertexes[3] - vertexes[0], // X
+                vertexes[4] - vertexes[1], // Y
+                vertexes[5] - vertexes[2]  // Z
+        };
 
-        for (int i = 0; i < vertexes.length; i++) {
-            triangles[i] = new KittyLibTriangleData(vertexes[i], normal, texCoords[i]);
+        double[] edge2 = new double[]{ // Subtract vertex 2 from 0
+                vertexes[6] - vertexes[0], // X
+                vertexes[7] - vertexes[1], // Y
+                vertexes[8] - vertexes[2]  // Z
+        };
+
+        double[] normal = normalize(crossProduct(edge1, edge2));
+
+        for (int i = 0; i < triangles.length - 1; i++) {
+            triangles[i] = new KittyLibTriangleData(
+                    new double[] {
+                            vertexes[3 * i],
+                            vertexes[3 * i + 1],
+                            vertexes[3 * i + 2]
+                    },
+                    normal,
+                    new float[] {
+                            texCoords[2 * i],
+                            texCoords[2 * i + 1]
+                    }
+            );
         }
 
-        triangles[vertexes.length] = triangles[0]; // close loop
-
+        triangles[triangles.length - 1] = triangles[0];
         return new KittyLibFace(triangles);
+    }
+
+    public static double[] multiplyMatrix(double[] matrix1, double[] matrix2) {
+        return new double[]{
+                matrix1[0] * matrix2[0],
+                matrix1[1] * matrix2[1],
+                matrix1[2] * matrix2[2]
+        };
+    }
+
+    public static double[] crossProduct(double[] vector1, double[] vector2) {
+        return new double[]{
+                vector1[1] * vector2[2] - vector1[2] * vector2[1],
+                vector1[2] * vector2[0] - vector1[0] * vector2[2],
+                vector1[0] * vector2[1] - vector1[1] * vector2[0]
+        };
+    }
+
+    public static double[] normalize(double[] vector) {
+        double magnitude = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
+        return new double[]{
+                vector[0] / magnitude,
+                vector[1] / magnitude,
+                vector[2] / magnitude
+        };
     }
 }
