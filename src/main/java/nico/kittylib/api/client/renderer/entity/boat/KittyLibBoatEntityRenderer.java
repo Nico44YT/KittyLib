@@ -33,7 +33,7 @@ public class KittyLibBoatEntityRenderer extends BoatEntityRenderer {
         if(boatEntity instanceof KittyLibBoat boat) {
             return getTexture(boat.getBoatVariant(), boat instanceof KittyLibChestBoatEntity);
         }
-        throw new RuntimeException("KittyLibBoatEntityRenderer registered for non KittyLibBoat" + boatEntity.getClass());
+        throw new RuntimeException("[KittyLib] BoatEntityRenderer registered for non KittyLibBoat" + boatEntity.getClass());
     }
 
     public CompositeEntityModel<BoatEntity> createModel(EntityRendererFactory.Context context, KittyLibBoat boat, boolean chest) {
