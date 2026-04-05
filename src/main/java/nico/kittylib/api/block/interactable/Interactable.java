@@ -11,13 +11,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public interface Interactable {
-    List<InteractableEntry> actions = new ArrayList<>();
+    HashMap<Interactable, List<InteractableEntry>> actions = new HashMap<>();
 
     default void addAction(Vec3d hitPos, double maxDistance, InteractableAction action) {
-        actions.add(new InteractableRadiusEntry(hitPos, maxDistance, action));
+        actions.computeIfAbsent(this, $ -> new ArrayList<>()).add(new InteractableRadiusEntry(hitPos, maxDistance, action));
     }
 
     default void addPixelAction(Vec3d hitPos, double maxDistance, InteractableAction action) {
@@ -25,7 +26,7 @@ public interface Interactable {
     }
 
     default void addAction(Vec3d corner1, Vec3d corner2, InteractableAction action) {
-        actions.add(new InteractableZoneEntry(corner1, corner2, action));
+        actions.computeIfAbsent(this, $ -> new ArrayList<>()).add(new InteractableZoneEntry(corner1, corner2, action));
     }
 
     default void addPixelAction(Vec3d corner1, Vec3d corner2, InteractableAction action) {
@@ -35,7 +36,7 @@ public interface Interactable {
     default ActionResult checkAndExecuteActions(Vec3d hitPos, World world, PlayerEntity player, Hand hand, BlockState blockState, BlockPos blockPos) {
         final Vec3d rotatedHitPos = rotateHitLocal(hitPos.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getOrEmpty(Properties.HORIZONTAL_FACING).orElse(Direction.NORTH));
 
-        for (InteractableEntry entry : actions) {
+        for (InteractableEntry entry : actions.computeIfAbsent(this, $ -> new ArrayList<>())) {
             if (entry.canInteract(rotatedHitPos)) {
                 return entry.getAction().apply(world, player, hand, blockState, blockPos, rotatedHitPos);
             }
