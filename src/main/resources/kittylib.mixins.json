@@ -26,7 +26,8 @@
     "client.hanging_sign.HangingSignBlockEntityRendererMixin",
     "client.sign.SignBlockEntityRendererMixin",
     "client.sign.SignEditScreenMixin",
-    "client.tooltip.TooltipBackgroundRendererMixin"
+    "client.tooltip.TooltipBackgroundRendererMixin",
+    "client.tooltip.TooltipComponentMixin"
   ],
   "injectors": {
     "defaultRequire": 1
