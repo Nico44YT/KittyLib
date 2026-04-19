@@ -36,7 +36,7 @@ public class KittyLibScreenshakeInstance implements NbtConvertible {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbtCompound) {
+    public void kittylib$writeNbt(NbtCompound nbtCompound) {
         nbtCompound.putInt("progress", this.progress);
         nbtCompound.putInt("duration", this.MAX_DURATION);
 
@@ -49,7 +49,7 @@ public class KittyLibScreenshakeInstance implements NbtConvertible {
     }
 
     @Override
-    public void readNbt(NbtCompound nbtCompound) {
+    public void kittylib$readNbt(NbtCompound nbtCompound) {
         this.progress = nbtCompound.getInt("progress");
         this.MAX_DURATION = nbtCompound.getInt("duration");
 
@@ -63,13 +63,13 @@ public class KittyLibScreenshakeInstance implements NbtConvertible {
 
     public NbtCompound toNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        writeNbt(nbtCompound);
+        kittylib$writeNbt(nbtCompound);
         return nbtCompound;
     }
 
     public static KittyLibScreenshakeInstance fromNbt(NbtCompound nbtCompound) {
         KittyLibScreenshakeInstance instance = new KittyLibScreenshakeInstance(0);
-        instance.readNbt(nbtCompound);
+        instance.kittylib$readNbt(nbtCompound);
         return instance;
     }
 }

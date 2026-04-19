@@ -8,6 +8,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.nyx.home_smp.HomeSMP;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -42,8 +43,8 @@ public class KittyLibBlockSet {
 
         this.entriesMap = new LinkedHashMap<>();
 
-        this.blockTagSupplier = Suppliers.memoize(() -> TagKey.of(RegistryKeys.BLOCK, identifierFunction.apply(setName)));
-        this.itemTagSupplier = Suppliers.memoize(() -> TagKey.of(RegistryKeys.ITEM, identifierFunction.apply(setName)));
+        this.blockTagSupplier = Suppliers.memoize(() -> TagKey.of(RegistryKeys.BLOCK, HomeSMP.id(setName)));
+        this.itemTagSupplier = Suppliers.memoize(() -> TagKey.of(RegistryKeys.ITEM, HomeSMP.id(setName)));
     }
 
     public @Nullable Block getBase() {

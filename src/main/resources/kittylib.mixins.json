@@ -10,7 +10,12 @@
     "injections.BlockMixin",
     "injections.EntityMixin",
     "injections.ItemMixin",
-    "injections.Vec3iMixin"
+    "injections.ItemStackMixin",
+    "injections.Vec3iMixin",
+    "littable_block.DispenserBlockAccessor",
+    "littable_block.FireChargeItemMixin",
+    "littable_block.FlintAndSteelItemMixin",
+    "littable_block.ItemDispenserBehaviorAccessor"
   ],
   "client": [
     "client.DrawContextMixin",

@@ -18,4 +18,12 @@ public class InteractableRadiusEntry extends InteractableEntry {
     public boolean canInteract(Vec3d hitPos) {
         return hitPos.distanceTo(this.centralPos) <= this.radius;
     }
+
+    public Vec3d getCentralPos() {
+        return centralPos;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
 }

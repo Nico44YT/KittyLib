@@ -18,14 +18,14 @@ public abstract class Vec3iMixin implements NbtConvertible {
     private int z;
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public void kittylib$writeNbt(NbtCompound nbt) {
         nbt.putInt("x", this.x);
         nbt.putInt("y", this.y);
         nbt.putInt("z", this.z);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void kittylib$readNbt(NbtCompound nbt) {
         this.x = nbt.getInt("x");
         this.y = nbt.getInt("y");
         this.z = nbt.getInt("z");

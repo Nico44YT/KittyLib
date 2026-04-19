@@ -66,7 +66,6 @@ public class KittyLibColoredBlockSet extends KittyLibBlockSet {
     }
 
     public static <T extends KittyLibColoredBlockSet> KittyLibColoredBlockEntry<T> create(String color, Item dyeItem) {
-        return new KittyLibColoredBlockEntry<>((set, name) -> set.namingFunction.apply(set, name, color), (set, settings) -> set.getBlockFunction().apply(settings), (block, family) -> {
-        }, dyeItem);
+        return new KittyLibColoredBlockEntry<>((set, name) -> set.namingFunction.apply(set, name, color), (set, settings) -> set.getBlockFunction().apply(settings), (block, family) -> {}, dyeItem);
     }
 }

@@ -43,6 +43,10 @@
 
       "net/minecraft/class_2382": [
         "nico/kittylib/api/nbt/NbtConvertible"
+      ],
+
+      "net/minecraft/class_1799": [
+        "nico/kittylib/api/nbt/ItemStackInjection"
       ]
     }
   }

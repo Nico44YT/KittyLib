@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface Interactable {
-    HashMap<Interactable, List<InteractableEntry>> actions = new HashMap<>();
+   HashMap<Interactable, List<InteractableEntry>> actions = new HashMap<>();
 
     default void addAction(Vec3d hitPos, double maxDistance, InteractableAction action) {
         actions.computeIfAbsent(this, $ -> new ArrayList<>()).add(new InteractableRadiusEntry(hitPos, maxDistance, action));
     }
 
     default void addPixelAction(Vec3d hitPos, double maxDistance, InteractableAction action) {
-        addAction(hitPos.multiply(1 / 16d), maxDistance, action);
+        addAction(hitPos.multiply(1 / 16d), maxDistance / 16f, action);
     }
 
     default void addAction(Vec3d corner1, Vec3d corner2, InteractableAction action) {
@@ -36,9 +36,17 @@ public interface Interactable {
     default ActionResult checkAndExecuteActions(Vec3d hitPos, World world, PlayerEntity player, Hand hand, BlockState blockState, BlockPos blockPos) {
         final Vec3d rotatedHitPos = rotateHitLocal(hitPos.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getOrEmpty(Properties.HORIZONTAL_FACING).orElse(Direction.NORTH));
 
+        InteractableEntry entry = getClosesEntry(rotatedHitPos);
+        if(entry != null) return entry.getAction().apply(world, player, hand, blockState, blockPos, rotatedHitPos);
+
+        return null;
+    }
+
+
+    default InteractableEntry getClosesEntry(Vec3d hitPos) {
         for (InteractableEntry entry : actions.computeIfAbsent(this, $ -> new ArrayList<>())) {
-            if (entry.canInteract(rotatedHitPos)) {
-                return entry.getAction().apply(world, player, hand, blockState, blockPos, rotatedHitPos);
+            if (entry.canInteract(hitPos)) {
+                return entry;
             }
         }
 

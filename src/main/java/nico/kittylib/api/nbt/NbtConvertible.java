@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 
 public interface NbtConvertible {
 
-    default void writeNbt(NbtCompound nbt) {
+    default void kittylib$writeNbt(NbtCompound nbt) {
         for (Field field : getAllFields(this.getClass())) {
             if (!field.isAnnotationPresent(NbtStorable.class)) continue;
             if (Modifier.isStatic(field.getModifiers())) continue;
@@ -26,7 +26,7 @@ public interface NbtConvertible {
         }
     }
 
-    default void readNbt(NbtCompound nbt) {
+    default void kittylib$readNbt(NbtCompound nbt) {
         for (Field field : getAllFields(this.getClass())) {
             if (!field.isAnnotationPresent(NbtStorable.class)) continue;
             if (Modifier.isStatic(field.getModifiers())) continue;
@@ -73,7 +73,7 @@ public interface NbtConvertible {
             nbt.putString(key, s);
         } else if (value instanceof NbtConvertible c) {
             NbtCompound sub = new NbtCompound();
-            c.writeNbt(sub);
+            c.kittylib$writeNbt(sub);
             nbt.put(key, sub);
         } else {
             throw new IllegalArgumentException("Unsupported NBT type: " + value.getClass());
@@ -96,7 +96,7 @@ public interface NbtConvertible {
         if (NbtConvertible.class.isAssignableFrom(type)) {
             try {
                 NbtConvertible obj = (NbtConvertible) type.getDeclaredConstructor().newInstance();
-                obj.readNbt(nbt.getCompound(key));
+                obj.kittylib$readNbt(nbt.getCompound(key));
                 return obj;
             } catch (Exception e) {
                 throw new RuntimeException("Failed to create NbtConvertible: " + type, e);
