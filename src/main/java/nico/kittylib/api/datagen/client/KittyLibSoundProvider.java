@@ -32,6 +32,16 @@ public abstract class KittyLibSoundProvider implements DataProvider {
         this.rootObject = new JsonObject();
     }
 
+    public void registerSound(@NotNull SoundEvent soundEvent, @NotNull KittyLibSoundData.Builder... instances) {
+        this.registerSound(soundEvent.getId().getPath(), null, null, instances);
+    }
+
+
+    public void registerSound(@NotNull SoundEvent soundEvent, @Nullable Boolean replace, @NotNull KittyLibSoundData.Builder... instances) {
+        this.registerSound(soundEvent.getId().getPath(), null, replace, instances);
+    }
+
+
     public void registerSound(@NotNull SoundEvent soundEvent, @Nullable String subtitle, @Nullable Boolean replace, @NotNull KittyLibSoundData.Builder... instances) {
         this.registerSound(soundEvent.getId().getPath(), subtitle, replace, instances);
     }
@@ -53,6 +63,10 @@ public abstract class KittyLibSoundProvider implements DataProvider {
      * @param instances The sound files this sound event uses. One of the listed sounds is randomly selected to play when this sound event is triggered.
      */
     public void registerSound(@NotNull String soundKey, @Nullable String subtitle, @Nullable Boolean replace, @NotNull KittyLibSoundData... instances) {
+        KittyLibSoundProvider.registerSound(rootObject, soundKey, subtitle, replace, instances);
+    }
+
+    public static void registerSound(JsonObject rootObject, @NotNull String soundKey, @Nullable String subtitle, @Nullable Boolean replace, @NotNull KittyLibSoundData[] instances) {
         JsonObject soundObject = new JsonObject();
 
         JsonArray soundsArray = new JsonArray();
@@ -70,13 +84,16 @@ public abstract class KittyLibSoundProvider implements DataProvider {
 
     @Override
     public CompletableFuture<?> run(DataWriter writer) {
-        return DataProvider.writeToPath(writer, (JsonElement) rootObject, soundFilePathResolver.resolve(Identifier.of(id, "sounds"), "json"));
+        return DataProvider.writeToPath(writer, rootObject, soundFilePathResolver.resolve(Identifier.of(id, "sounds"), "json"));
     }
 
+    public JsonObject getRootObject() {
+        return rootObject;
+    }
 
     @Override
     public String getName() {
-        return "kittylib:sounds";
+        return "kittylib:sounds/" + id;
     }
 
     public record KittyLibSoundData(String name, Float volume, Float pitch, Integer weight, Boolean stream, Integer attenuationDistance, Boolean preload, Type type) {

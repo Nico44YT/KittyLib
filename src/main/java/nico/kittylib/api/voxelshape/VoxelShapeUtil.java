@@ -13,7 +13,7 @@ public class VoxelShapeUtil {
     private static final Map<CacheKey, VoxelShape> cachedVoxelShapes = new HashMap<>();
 
     public static VoxelShape rotate(VoxelShape shape, Direction direction) {
-        return rotate(shape, direction.getHorizontal());
+        return rotate(shape, direction.getHorizontal() * 90 % 360);
     }
 
     /**
@@ -24,8 +24,13 @@ public class VoxelShapeUtil {
      * @return The rotated VoxelShape.
      */
     public static VoxelShape rotate(VoxelShape shape, int rotation) {
+        if(rotation < 0) {
+            //rotation = rotation * -1 / 90 * 270 % 360;
+            rotation = -3 * rotation % 360;
+        }
+        rotation %= 360;
         if (rotation % 90 != 0) {
-            throw new IllegalArgumentException("Rotation must be a multiple of 90");
+            throw new IllegalArgumentException("Rotation \"" + rotation + "\" must be a multiple of 90");
         }
 
         if (rotation == 0) {
