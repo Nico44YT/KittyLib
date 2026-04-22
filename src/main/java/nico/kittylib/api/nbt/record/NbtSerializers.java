@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -171,6 +172,23 @@ public class NbtSerializers {
         NbtCompound container = nbtCompound.getCompound(key);
         int type = container.getInt("type");
         return container.getList("list", type);
+    }
+    //endregion
+
+    //region // RegistryKey //
+    public static void putRegistryKey(NbtCompound nbtCompound, String key, RegistryKey<?> registryKey) {
+        NbtCompound container = new NbtCompound();
+        putIdentifier(container, "registry", registryKey.getRegistry());
+        putIdentifier(container, "value", registryKey.getValue());
+        nbtCompound.put(key, container);
+    }
+
+    public static RegistryKey<?> getRegistryKey(NbtCompound nbtCompound, String key) {
+        NbtCompound container = nbtCompound.getCompound(key);
+        Identifier registry = getIdentifier(container, "registry");
+        Identifier value = getIdentifier(container, "value");
+
+        return RegistryKey.of(RegistryKey.ofRegistry(registry), value);
     }
     //endregion
 }

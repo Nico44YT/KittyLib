@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import nico.kittylib.api.nbt.ItemStackInjection;
+import nico.kittylib.api.nbt.record.NbtHolder;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,11 +13,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements ItemStackInjection {
-    @Shadow
-    @Nullable
-    public abstract NbtCompound getNbt();
-
+public abstract class ItemStackMixin implements ItemStackInjection, NbtHolder {
     @Shadow
     public abstract boolean hasNbt();
 
@@ -25,6 +22,10 @@ public abstract class ItemStackMixin implements ItemStackInjection {
 
     @Shadow
     public abstract void setNbt(@Nullable NbtCompound nbt);
+
+    @Shadow
+    @Nullable
+    public abstract NbtCompound getNbt();
 
     @Override
     public NbtElement kittylib$getElement(String key) {
@@ -35,7 +36,7 @@ public abstract class ItemStackMixin implements ItemStackInjection {
 
     @Override
     public NbtElement kittylib$getElementOrElse(String key, Supplier<NbtElement> elseSupplier) {
-        return hasNbt() && getNbt().contains(key) ? getNbt().get(key) : elseSupplier.get();
+        return hasNbt() && kittylib$getNbt().contains(key) ? kittylib$getNbt().get(key) : elseSupplier.get();
     }
 
     @Override
@@ -48,5 +49,15 @@ public abstract class ItemStackMixin implements ItemStackInjection {
         NbtCompound nbtCompound = getOrCreateNbt();
         nbtCompound.put(key, nbtElement);
         this.setNbt(nbtCompound);
+    }
+
+    @Override
+    public NbtCompound kittylib$getNbt() {
+        return getOrCreateNbt();
+    }
+
+    @Override
+    public void kittylib$writeNbt(NbtCompound nbtCompound) {
+        setNbt(nbtCompound);
     }
 }

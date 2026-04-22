@@ -4,6 +4,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtType;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -121,6 +123,10 @@ public class NbtTypeHandler<T> {
                     .put(NbtList.class, new NbtTypeHandler<>(
                             NbtSerializers::putList,
                             NbtSerializers::getList
+                    ))
+                    .put(RegistryKey.class, new NbtTypeHandler<>(
+                            NbtSerializers::putRegistryKey,
+                            NbtSerializers::getRegistryKey
                     ))
 
                     .build();
