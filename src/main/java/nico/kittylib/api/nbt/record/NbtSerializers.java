@@ -4,6 +4,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -155,6 +156,21 @@ public class NbtSerializers {
         NbtCompound container = nbtCompound.getCompound(name);
 
         return Enum.valueOf(Enum.class, container.getString("name"));
+    }
+    //endregion
+
+    //region // NbtList //
+    public static void putList(NbtCompound nbtCompound, String key, NbtList list) {
+        NbtCompound container = new NbtCompound();
+        container.putInt("type", list.getHeldType());
+        container.put("list", list);
+        nbtCompound.put(key, container);
+    }
+
+    public static NbtList getList(NbtCompound nbtCompound, String key) {
+        NbtCompound container = nbtCompound.getCompound(key);
+        int type = container.getInt("type");
+        return container.getList("list", type);
     }
     //endregion
 }

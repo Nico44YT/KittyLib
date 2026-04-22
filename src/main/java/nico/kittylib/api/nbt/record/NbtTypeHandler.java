@@ -3,6 +3,7 @@ package nico.kittylib.api.nbt.record;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -86,6 +87,11 @@ public class NbtTypeHandler<T> {
                     .put(NbtCompound.class, new NbtTypeHandler<>(
                             NbtCompound::put,
                             NbtCompound::getCompound
+                    ))
+
+                    .put(NbtList.class, new NbtTypeHandler<>(
+                            NbtSerializers::putList,
+                            NbtSerializers::getList
                     ))
 
                     // Custom
