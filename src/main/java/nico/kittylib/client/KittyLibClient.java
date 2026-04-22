@@ -9,6 +9,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.world.World;
 import nico.kittylib.KittyLibMain;
+import nico.kittylib.api.client.screen.KittyLibScreenRegistry;
+import nico.kittylib.api.networking.KittyLibOpenScreenS2C;
 import nico.kittylib.api.networking.KittyLibSyncBlockEntityS2C;
 import nico.kittylib.api.screen.BlockBoundScreenProvider;
 import nico.kittylib.internal.networking.OpenBlockBoundScreenS2C;
@@ -41,6 +43,11 @@ public class KittyLibClient implements ClientModInitializer {
                 Screen screen = provider.createScreen(world, packet.pos(), blockState, player);
                 MinecraftClient.getInstance().setScreen(screen);
             }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(KittyLibOpenScreenS2C.TYPE, (packet, player, sender) -> {
+            Screen screen = KittyLibScreenRegistry.getScreen(packet.screenId(), packet.additionalData());
+            MinecraftClient.getInstance().setScreen(screen);
         });
     }
 }
