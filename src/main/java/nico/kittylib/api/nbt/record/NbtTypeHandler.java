@@ -89,11 +89,6 @@ public class NbtTypeHandler<T> {
                             NbtCompound::getCompound
                     ))
 
-                    .put(NbtList.class, new NbtTypeHandler<>(
-                            NbtSerializers::putList,
-                            NbtSerializers::getList
-                    ))
-
                     // Custom
                     .put(BlockPos.class, new NbtTypeHandler<>(
                             NbtSerializers::putBlockPos,
@@ -122,6 +117,10 @@ public class NbtTypeHandler<T> {
                     .put(Enum.class, new NbtTypeHandler<>(
                             NbtSerializers::putEnum,
                             NbtSerializers::getEnum
+                    ))
+                    .put(NbtList.class, new NbtTypeHandler<>(
+                            NbtSerializers::putList,
+                            NbtSerializers::getList
                     ))
 
                     .build();
