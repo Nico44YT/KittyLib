@@ -7,7 +7,23 @@ public interface NbtHolder {
         throw new RuntimeException();
     }
 
-    default void kittylib$writeNbt(NbtCompound nbtCompound) {
+    default NbtCompound kittylib$getOrCreateNbt() {
+        throw new RuntimeException();
+    }
+
+    default NbtCompound kittylib$getSubNbt(String key) {
+        throw new RuntimeException();
+    }
+
+    default NbtCompound kittylib$getOrCreateSubNbt(String key) {
+        throw new RuntimeException();
+    }
+
+    default void kittylib$setNbt(NbtCompound nbtCompound) {
+        throw new RuntimeException();
+    }
+
+    default void kittylib$setSubNbt(String key, NbtCompound nbtCompound) {
         throw new RuntimeException();
     }
 }

@@ -54,7 +54,41 @@ public abstract class EntityMixin implements KittyLibInjectedMethods<Entity>, Nb
     }
 
     @Override
-    public void kittylib$writeNbt(NbtCompound nbtCompound) {
+    public NbtCompound kittylib$getOrCreateNbt() {
+        // Entities always serialize into a fresh compound,
+        // so "getOrCreate" is effectively identical
+        return kittylib$getNbt();
+    }
+
+    @Override
+    public void kittylib$setNbt(NbtCompound nbtCompound) {
         readCustomDataFromNbt(nbtCompound);
+    }
+
+    @Override
+    public NbtCompound kittylib$getSubNbt(String key) {
+        NbtCompound nbt = kittylib$getNbt();
+        return nbt.contains(key) ? nbt.getCompound(key) : null;
+    }
+
+    @Override
+    public NbtCompound kittylib$getOrCreateSubNbt(String key) {
+        NbtCompound nbt = kittylib$getNbt();
+
+        if (!nbt.contains(key)) {
+            NbtCompound newTag = new NbtCompound();
+            nbt.put(key, newTag);
+            kittylib$setNbt(nbt);
+            return newTag;
+        }
+
+        return nbt.getCompound(key);
+    }
+
+    @Override
+    public void kittylib$setSubNbt(String key, NbtCompound nbtCompound) {
+        NbtCompound nbt = kittylib$getNbt();
+        nbt.put(key, nbtCompound);
+        kittylib$setNbt(nbt);
     }
 }

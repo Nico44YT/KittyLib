@@ -27,6 +27,16 @@ public abstract class ItemStackMixin implements ItemStackInjection, NbtHolder {
     @Nullable
     public abstract NbtCompound getNbt();
 
+    @Shadow
+    public abstract NbtCompound getOrCreateSubNbt(String key);
+
+    @Shadow
+    public abstract void setSubNbt(String key, NbtElement element);
+
+    @Shadow
+    @Nullable
+    public abstract NbtCompound getSubNbt(String key);
+
     @Override
     public NbtElement kittylib$getElement(String key) {
         if(!hasNbt()) return null;
@@ -53,11 +63,31 @@ public abstract class ItemStackMixin implements ItemStackInjection, NbtHolder {
 
     @Override
     public NbtCompound kittylib$getNbt() {
+        return getNbt();
+    }
+
+    @Override
+    public void kittylib$setNbt(NbtCompound nbtCompound) {
+        setNbt(nbtCompound);
+    }
+
+    @Override
+    public NbtCompound kittylib$getSubNbt(String key) {
+        return getSubNbt(key);
+    }
+
+    @Override
+    public void kittylib$setSubNbt(String key, NbtCompound nbtCompound) {
+        setSubNbt(key, nbtCompound);
+    }
+
+    @Override
+    public NbtCompound kittylib$getOrCreateNbt() {
         return getOrCreateNbt();
     }
 
     @Override
-    public void kittylib$writeNbt(NbtCompound nbtCompound) {
-        setNbt(nbtCompound);
+    public NbtCompound kittylib$getOrCreateSubNbt(String key) {
+        return getOrCreateSubNbt(key);
     }
 }
