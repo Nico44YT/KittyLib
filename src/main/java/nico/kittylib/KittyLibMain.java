@@ -2,6 +2,7 @@ package nico.kittylib;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import nico.kittylib.api.nbt.record.NbtTypeHandler;
 import nico.kittylib.api.util.KittyLibIdentifier;
 import nico.kittylib.internal.scheduler.ImplementedScheduler;
 import org.slf4j.Logger;

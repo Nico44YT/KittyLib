@@ -30,7 +30,8 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_1297": [
         "nico/kittylib/api/util/KittyLibIdentifierResolvable",
-        "nico/kittylib/api/util/KittyLibInjectedMethods"
+        "nico/kittylib/api/util/KittyLibInjectedMethods",
+        "nico/kittylib/api/nbt/record/NbtHolder"
       ],
       "net/minecraft/class_1792": [
         "nico/kittylib/api/util/KittyLibIdentifierResolvable",
@@ -46,7 +47,8 @@
       ],
 
       "net/minecraft/class_1799": [
-        "nico/kittylib/api/nbt/ItemStackInjection"
+        "nico/kittylib/api/nbt/ItemStackInjection",
+        "nico/kittylib/api/nbt/record/NbtHolder"
       ]
     }
   }

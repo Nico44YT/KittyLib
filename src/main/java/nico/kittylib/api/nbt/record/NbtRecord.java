@@ -7,18 +7,26 @@ import java.util.Optional;
 public class NbtRecord<T> {
 
     private final String key;
-    private final NbtTypeHandler<T> type;
+    private final NbtTypeHandler<T> typeHandler;
 
     @SuppressWarnings("unchecked")
     protected NbtRecord(String key, Class<T> valueClass) {
-        this.key = key;
-        this.type = (NbtTypeHandler<T>) NbtTypeHandler.HANDLERS.get(valueClass);
+        this(key, valueClass, (NbtTypeHandler<T>) NbtTypeHandlers.getInstance().HANDLERS.get(valueClass));
+    }
 
-        if (type == null) throw new RuntimeException("Couldn't find NbtTypeHandler for " + valueClass.getName());
+    protected NbtRecord(String key, Class<T> valueClass, NbtTypeHandler<T> typeHandler) {
+        this.key = key;
+        this.typeHandler = typeHandler;
+
+        if (this.typeHandler == null) throw new RuntimeException("Couldn't find NbtTypeHandler for " + valueClass.getName());
     }
 
     public static <T> NbtRecord<T> of(String key, Class<T> valueClass) {
         return new NbtRecord<>(key, valueClass);
+    }
+
+    public static <T> NbtRecord<T> of(String key, Class<T> valueClass, NbtTypeHandler<T> typeHandler) {
+        return new NbtRecord<>(key, valueClass, typeHandler);
     }
 
     //region // Get //
@@ -125,6 +133,7 @@ public class NbtRecord<T> {
             }
         }
     }
+
     public void remove(NbtCompound nbtCompound) {
         if (nbtCompound != null) nbtCompound.remove(key);
     }
@@ -132,11 +141,11 @@ public class NbtRecord<T> {
 
     //region // Helpers //
     protected static <T> void write(NbtCompound nbt, NbtRecord<T> record, T value) {
-        record.type.write(nbt, record.key, value);
+        record.typeHandler.write(nbt, record.key, value);
     }
 
     protected static <T> T read(NbtCompound nbt, NbtRecord<T> record) {
-        return record.type.read(nbt, record.key);
+        return record.typeHandler.read(nbt, record.key);
     }
     //endregion
 }
