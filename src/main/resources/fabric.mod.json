@@ -49,6 +49,10 @@
       "net/minecraft/class_1799": [
         "nico/kittylib/api/nbt/ItemStackInjection",
         "nico/kittylib/api/nbt/record/NbtHolder"
+      ],
+
+      "net/minecraft/class_2487": [
+        "nico/kittylib/api/nbt/record/NbtHolder"
       ]
     }
   }

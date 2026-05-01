@@ -11,6 +11,7 @@
     "injections.EntityMixin",
     "injections.ItemMixin",
     "injections.ItemStackMixin",
+    "injections.NbtCompoundMixin",
     "injections.Vec3iMixin",
     "littable_block.DispenserBlockAccessor",
     "littable_block.FireChargeItemMixin",
