@@ -28,6 +28,10 @@
   },
   "custom": {
     "loom:injected_interfaces": {
+      "net/minecraft/class_789": [
+        "nico/kittylib/internal/client/open_format/KittyLibModelRotationInject"
+      ],
+
       "net/minecraft/class_1297": [
         "nico/kittylib/api/util/KittyLibIdentifierResolvable",
         "nico/kittylib/api/util/KittyLibInjectedMethods",
@@ -41,16 +45,13 @@
         "nico/kittylib/api/util/KittyLibIdentifierResolvable",
         "nico/kittylib/api/util/KittyLibInjectedMethods"
       ],
-
       "net/minecraft/class_2382": [
         "nico/kittylib/api/nbt/NbtConvertible"
       ],
-
       "net/minecraft/class_1799": [
         "nico/kittylib/api/nbt/ItemStackInjection",
         "nico/kittylib/api/nbt/record/NbtHolder"
       ],
-
       "net/minecraft/class_2487": [
         "nico/kittylib/api/nbt/record/NbtHolder"
       ]
