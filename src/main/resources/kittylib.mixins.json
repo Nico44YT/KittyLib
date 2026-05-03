@@ -21,6 +21,7 @@
   "client": [
     "client.DrawContextMixin",
     "client.TexturedRenderLayersMixin",
+    "client.TranslationStorageMixin",
     "client.accessor.TooltipBackgroundRendererAccessor",
     "client.boat.BoatEntityRendererMixin",
     "client.cat.CatCollarFeatureRendererMixin",
