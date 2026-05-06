@@ -28,10 +28,6 @@
   },
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_789": [
-        "nico/kittylib/internal/client/open_format/KittyLibModelRotationInject"
-      ],
-
       "net/minecraft/class_1297": [
         "nico/kittylib/api/util/KittyLibIdentifierResolvable",
         "nico/kittylib/api/util/KittyLibInjectedMethods",
