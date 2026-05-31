@@ -4,9 +4,9 @@
   "package": "nico.kittylib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BoatEntityMixin",
-    "LivingEntityHurtCaller",
-    "client.tooltip.ItemStackMixin",
+    "entity.BoatEntityMixin",
+    "entity.ItemEntityMixin",
+    "entity.LivingEntityHurtCaller",
     "injections.BlockMixin",
     "injections.EntityMixin",
     "injections.ItemMixin",
@@ -28,6 +28,7 @@
     "client.hanging_sign.HangingSignBlockEntityRendererMixin",
     "client.sign.SignBlockEntityRendererMixin",
     "client.sign.SignEditScreenMixin",
+    "client.tooltip.ItemStackMixin",
     "client.tooltip.TooltipBackgroundRendererMixin",
     "client.tooltip.TooltipComponentMixin"
   ],

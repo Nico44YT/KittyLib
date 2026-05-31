@@ -1,4 +1,4 @@
-package nico.kittylib.mixin;
+package nico.kittylib.mixin.entity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

@@ -1,4 +1,4 @@
-package nico.kittylib.mixin;
+package nico.kittylib.mixin.entity;
 
 import nico.kittylib.api.item.ItemEntityHurtListener;
 import net.minecraft.entity.LivingEntity;

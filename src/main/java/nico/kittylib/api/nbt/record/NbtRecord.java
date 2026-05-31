@@ -18,7 +18,8 @@ public class NbtRecord<T> {
         this.key = key;
         this.typeHandler = typeHandler;
 
-        if (this.typeHandler == null) throw new RuntimeException("Couldn't find NbtTypeHandler for " + valueClass.getName());
+        if (this.typeHandler == null)
+            throw new RuntimeException("Couldn't find NbtTypeHandler for " + valueClass.getName());
     }
 
     public static <T> NbtRecord<T> of(String key, Class<T> valueClass) {
