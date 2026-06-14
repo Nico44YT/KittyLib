@@ -34,6 +34,10 @@ public class KittyLibColoredBlockSet extends KittyLibBlockSet {
 
     private final Function<AbstractBlock.Settings, Block> blockFunction;
 
+    public KittyLibColoredBlockSet(String setName, OldSetEntryNamingFunction<? super KittyLibBlockSet> namingFunction, Function<AbstractBlock.Settings, Block> blockFunction, Function<String, Identifier> identifierFunction) {
+        this(setName, (set, entry, setName2, additive) -> namingFunction.apply(set, setName2, additive), blockFunction, identifierFunction);
+    }
+
     public KittyLibColoredBlockSet(String setName, SetEntryNamingFunction<? super KittyLibBlockSet> namingFunction, Function<AbstractBlock.Settings, Block> blockFunction, Function<String, Identifier> identifierFunction) {
         super(setName, namingFunction, identifierFunction);
 
@@ -66,6 +70,6 @@ public class KittyLibColoredBlockSet extends KittyLibBlockSet {
     }
 
     public static <T extends KittyLibColoredBlockSet> KittyLibColoredBlockEntry<T> create(String color, Item dyeItem) {
-        return new KittyLibColoredBlockEntry<>((set, name) -> set.namingFunction.apply(set, name, color), (set, settings) -> set.getBlockFunction().apply(settings), (block, family) -> {}, dyeItem);
+        return new KittyLibColoredBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, color), (set, settings) -> set.getBlockFunction().apply(settings), (block, family) -> {}, dyeItem);
     }
 }
