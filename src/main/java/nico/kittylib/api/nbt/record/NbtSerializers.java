@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -69,21 +70,16 @@ public class NbtSerializers {
     }
     //endregion
 
-    /* TODO
     //region// ItemStack //
-    public static void putItemStack(NbtCompound nbtCompound, String name, ItemStack itemStack) {
-        NbtCompound container = new NbtCompound();
-        itemStack.write(container);
-        nbtCompound.put(name, container);
+    public static void putItemStack(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbtCompound, String name, ItemStack itemStack) {
+        nbtCompound.put(name, itemStack.encode(wrapperLookup));
     }
 
-    public static ItemStack getItemStack(NbtCompound nbtCompound, String name) {
+    public static ItemStack getItemStack(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbtCompound, String name) {
         NbtCompound container = nbtCompound.getCompound(name);
-        return ItemStack.fromNbt(container);
+        return ItemStack.fromNbt(wrapperLookup, container).orElse(null);
     }
     //endregion
-     */
-
 
     //region // Identifier //
     public static void putIdentifier(NbtCompound nbtCompound, String name, Identifier identifier) {

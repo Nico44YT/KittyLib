@@ -1,6 +1,8 @@
 package nico.kittylib.api.nbt.record;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryWrapper;
 
 import java.util.Optional;
 
@@ -31,69 +33,69 @@ public class NbtRecord<T> {
     }
 
     //region // Get //
-    public T get(NbtHolder nbtHolder) {
-        return nbtHolder.kittylib$getNbt() != null ? get(nbtHolder.kittylib$getNbt()) : null;
+    public T get(RegistryWrapper.WrapperLookup lookup, NbtHolder nbtHolder) {
+        return nbtHolder.kittylib$getNbt() != null ? get(lookup, nbtHolder.kittylib$getNbt()) : null;
     }
 
-    public T getFromSub(NbtHolder holder, String subNbtKey) {
-        return holder.kittylib$getSubNbt(subNbtKey) != null ? get(holder.kittylib$getSubNbt(subNbtKey)) : null;
+    public T getFromSub(RegistryWrapper.WrapperLookup lookup, NbtHolder holder, String subNbtKey) {
+        return holder.kittylib$getSubNbt(subNbtKey) != null ? get(lookup, holder.kittylib$getSubNbt(subNbtKey)) : null;
     }
 
-    public T get(NbtCompound nbtCompound) {
-        return read(nbtCompound, this);
+    public T get(RegistryWrapper.WrapperLookup lookup, NbtCompound nbtCompound) {
+        return read(lookup, nbtCompound, this);
     }
 
-    public Optional<T> maybeGet(NbtHolder holder) {
-        return Optional.ofNullable(get(holder));
+    public Optional<T> maybeGet(RegistryWrapper.WrapperLookup lookup, NbtHolder holder) {
+        return Optional.ofNullable(get(lookup, holder));
     }
 
-    public Optional<T> maybeGetFromSub(NbtHolder holder, String subNbtKey) {
+    public Optional<T> maybeGetFromSub(RegistryWrapper.WrapperLookup lookup, NbtHolder holder, String subNbtKey) {
         NbtCompound sub = holder.kittylib$getSubNbt(subNbtKey);
-        return sub != null ? maybeGet(sub) : Optional.empty();
+        return sub != null ? maybeGet(lookup, sub) : Optional.empty();
     }
 
-    public Optional<T> maybeGet(NbtCompound nbtCompound) {
-        if (nbtCompound.contains(key)) return Optional.of(get(nbtCompound));
+    public Optional<T> maybeGet(RegistryWrapper.WrapperLookup lookup, NbtCompound nbtCompound) {
+        if (nbtCompound.contains(key)) return Optional.of(get(lookup, nbtCompound));
         return Optional.empty();
     }
     //endregion
 
     //region // Put //
-    public void put(NbtHolder holder, T value) {
+    public void put(RegistryWrapper.WrapperLookup lookup, NbtHolder holder, T value) {
         NbtCompound nbt = holder.kittylib$getOrCreateNbt();
-        put(nbt, value);
+        put(lookup, nbt, value);
         holder.kittylib$setNbt(nbt);
     }
 
-    public void putToSub(NbtHolder holder, String subNbtKey, T value) {
+    public void putToSub(RegistryWrapper.WrapperLookup lookup, NbtHolder holder, String subNbtKey, T value) {
         NbtCompound root = holder.kittylib$getOrCreateNbt();
         NbtCompound sub = root.contains(subNbtKey) ? root.getCompound(subNbtKey) : new NbtCompound();
 
-        put(sub, value);
+        put(lookup, sub, value);
 
         root.put(subNbtKey, sub);
         holder.kittylib$setNbt(root);
     }
 
-    public void put(NbtCompound nbtCompound, T value) {
-        write(nbtCompound, this, value);
+    public void put(RegistryWrapper.WrapperLookup lookup, NbtCompound nbtCompound, T value) {
+        write(lookup, nbtCompound, this, value);
     }
 
-    public void putIfAbsent(NbtHolder holder, T value) {
+    public void putIfAbsent(RegistryWrapper.WrapperLookup lookup, NbtHolder holder, T value) {
         NbtCompound nbt = holder.kittylib$getOrCreateNbt();
 
         if (!nbt.contains(key)) {
-            write(nbt, this, value);
+            write(lookup, nbt, this, value);
             holder.kittylib$setNbt(nbt);
         }
     }
 
-    public void putToSubIfAbsent(NbtHolder holder, String subNbtKey, T value) {
-        putIfAbsent(holder.kittylib$getOrCreateSubNbt(subNbtKey), value);
+    public void putToSubIfAbsent(RegistryWrapper.WrapperLookup lookup, NbtHolder holder, String subNbtKey, T value) {
+        putIfAbsent(lookup, holder.kittylib$getOrCreateSubNbt(subNbtKey), value);
     }
 
-    public void putIfAbsent(NbtCompound nbtCompound, T value) {
-        if (!nbtCompound.contains(key)) write(nbtCompound, this, value);
+    public void putIfAbsent(RegistryWrapper.WrapperLookup lookup, NbtCompound nbtCompound, T value) {
+        if (!nbtCompound.contains(key)) write(lookup, nbtCompound, this, value);
     }
     //endregion
 
@@ -141,12 +143,11 @@ public class NbtRecord<T> {
     //endregion
 
     //region // Helpers //
-    protected static <T> void write(NbtCompound nbt, NbtRecord<T> record, T value) {
-        record.typeHandler.write(nbt, record.key, value);
+    protected static <T> void write(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbt, NbtRecord<T> record, T value) {
+        record.typeHandler.write(wrapperLookup, nbt, record.key, value);
     }
-
-    protected static <T> T read(NbtCompound nbt, NbtRecord<T> record) {
-        return record.typeHandler.read(nbt, record.key);
+    protected static <T> T read(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbt, NbtRecord<T> record) {
+        return record.typeHandler.read(wrapperLookup, nbt, record.key);
     }
     //endregion
 }

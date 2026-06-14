@@ -121,11 +121,10 @@ public class NbtTypeHandlers {
                         NbtSerializers::putVec3i,
                         NbtSerializers::getVec3i
                 ))
-                /* TODO
                 .put(ItemStack.class, new NbtTypeHandler<>(
                         NbtSerializers::putItemStack,
                         NbtSerializers::getItemStack
-                ))*/
+                ))
                 .put(Identifier.class, new NbtTypeHandler<>(
                         NbtSerializers::putIdentifier,
                         NbtSerializers::getIdentifier
