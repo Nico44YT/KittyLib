@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.function.*;
 
 public class KittyLibBlockSet {
-    public static final KittyLibBlockEntry<KittyLibBlockSet> BASE = KittyLibBlockSet.NAMED_BASE.apply(null);
     public static final Function<String, KittyLibBlockEntry<KittyLibBlockSet>> NAMED_BASE = (named) -> new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, named), (set, settings) -> new Block(settings), (block, family) -> {
     });
+    public static final KittyLibBlockEntry<KittyLibBlockSet> BASE = KittyLibBlockSet.NAMED_BASE.apply(null);
 
     public static final TriFunction<
             String,
