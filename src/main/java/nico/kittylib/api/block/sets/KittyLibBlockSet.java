@@ -8,8 +8,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import nico.kittylib.api.block.sign.KittyLibSignBlock;
-import nico.kittylib.api.block.sign.KittyLibWallSignBlock;
 import nico.kittylib.api.java.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,19 +15,22 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class KittyLibBlockSet {
-    public static final KittyLibBlockEntry<KittyLibBlockSet> BASE = KittyLibBlockSet.NAMED_BASE.apply(null);
     public static final Function<String, KittyLibBlockEntry<KittyLibBlockSet>> NAMED_BASE = (named) -> new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, named), (set, settings) -> new Block(settings), (block, family) -> {
     });
+    public static final KittyLibBlockEntry<KittyLibBlockSet> BASE = KittyLibBlockSet.NAMED_BASE.apply(null);
 
     public static final TriFunction<
             String,
             BiFunction<KittyLibBlockSet, AbstractBlock.Settings, Block>,
             BiConsumer<Block, BlockFamily.Builder>,
             KittyLibBlockEntry<KittyLibBlockSet>> FACTORY =
-            (named,  blockFunction,blockFamilyConsumer) ->
+            (named, blockFunction, blockFamilyConsumer) ->
                     new KittyLibBlockEntry<>(
                             (set, name, entry) -> set.namingFunction.apply(set, entry, name, named),
                             blockFunction,
@@ -98,6 +99,7 @@ public class KittyLibBlockSet {
 
     /**
      * First entry is set as base of the following
+     *
      * @param settings
      * @param entries
      * @return
@@ -105,7 +107,7 @@ public class KittyLibBlockSet {
     @SafeVarargs
     public final KittyLibBlockSet register(final AbstractBlock.Settings settings, final KittyLibBlockEntry<KittyLibBlockSet>... entries) {
         for (KittyLibBlockEntry<KittyLibBlockSet> entry : entries) {
-            if(base == null) base = entry;
+            if (base == null) base = entry;
 
             this.entriesMap.put(entry, entry.register(this, settings));
         }

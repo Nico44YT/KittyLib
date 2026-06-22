@@ -2,6 +2,7 @@ package nico.kittylib.api.voxelshape;
 
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -24,7 +25,7 @@ public class VoxelShapeUtil {
      * @return The rotated VoxelShape.
      */
     public static VoxelShape rotate(VoxelShape shape, int rotation) {
-        if(rotation < 0) {
+        if (rotation < 0) {
             //rotation = rotation * -1 / 90 * 270 % 360;
             rotation = -3 * rotation % 360;
         }
@@ -76,9 +77,14 @@ public class VoxelShapeUtil {
         };
     }
 
-    public static VoxelShape move(VoxelShape shape, Vec3i position) {
+    public static VoxelShape moveBlock(VoxelShape shape, Vec3i position) {
         return shape.offset(position.getX(), position.getY(), position.getZ());
     }
 
-    private record CacheKey(int rotation, VoxelShape shape) {}
+    public static VoxelShape move(VoxelShape shape, Vec3d position) {
+        return shape.offset(position.getX()/16d, position.getY()/16d, position.getZ()/16d);
+    }
+
+    private record CacheKey(int rotation, VoxelShape shape) {
+    }
 }
