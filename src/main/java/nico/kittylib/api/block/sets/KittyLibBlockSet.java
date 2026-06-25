@@ -8,63 +8,67 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import nico.kittylib.api.block.sign.KittyLibSignBlock;
-import nico.kittylib.api.block.sign.KittyLibWallSignBlock;
-import nico.kittylib.api.java.function.TriFunction;
+import net.minecraft.util.Pair;
+import nico.kittylib.api.java.function.QuadFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class KittyLibBlockSet {
-    public static final Function<String, KittyLibBlockEntry<KittyLibBlockSet>> NAMED_BASE = (named) -> new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, named), (set, settings) -> new Block(settings), (block, family) -> {
+    public static final BiFunction<Function<KittyLibBlockSet, AbstractBlock.Settings>, SetEntryNamingFunction<KittyLibBlockSet>, KittyLibBlockEntry<KittyLibBlockSet>> NAMED_BASE = (settings, named) -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.BASE, (set, name, entry) -> named.apply(set, entry, name, null), (set) -> new Block(settings.apply(set)), (block, family) -> {
     });
-    public static final KittyLibBlockEntry<KittyLibBlockSet> BASE = KittyLibBlockSet.NAMED_BASE.apply(null);
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> BASE = settings -> KittyLibBlockSet.NAMED_BASE.apply(settings, null);
 
-    public static final TriFunction<
+    public static final QuadFunction<
+            Identifier,
             String,
-            BiFunction<KittyLibBlockSet, AbstractBlock.Settings, Block>,
+            Function<KittyLibBlockSet, Block>,
             BiConsumer<Block, BlockFamily.Builder>,
             KittyLibBlockEntry<KittyLibBlockSet>> FACTORY =
-            (named,  blockFunction,blockFamilyConsumer) ->
+            (entryId, named, blockFunction, blockFamilyConsumer) ->
                     new KittyLibBlockEntry<>(
+                            entryId,
                             (set, name, entry) -> set.namingFunction.apply(set, entry, name, named),
                             blockFunction,
                             blockFamilyConsumer
                     );
 
-    public static final BiFunction<String, BiConsumer<Block, BlockFamily.Builder>, KittyLibBlockEntry<KittyLibBlockSet>> BASIC_BLOCK = (named, blockFamilyConsumer) -> FACTORY.apply(named, (set, settings) -> new Block(settings), blockFamilyConsumer);
+    public static final QuadFunction<Identifier, String, Function<KittyLibBlockSet, AbstractBlock.Settings>, BiConsumer<Block, BlockFamily.Builder>, KittyLibBlockEntry<KittyLibBlockSet>> BASIC_BLOCK = (entryId, named, settings, blockFamilyConsumer) -> FACTORY.apply(entryId, named, (set) -> new Block(settings.apply(set)), blockFamilyConsumer);
 
-    public static final KittyLibBlockEntry<KittyLibBlockSet> CRACKED = BASIC_BLOCK.apply("cracked", (block, family) -> family.cracked(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> CHISELED = BASIC_BLOCK.apply("chiseled", (block, family) -> family.chiseled(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> CUT = BASIC_BLOCK.apply("cut", (block, family) -> family.cut(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> MOSAIC = BASIC_BLOCK.apply("mosaic", (block, family) -> family.mosaic(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> CRACKED = settings -> BASIC_BLOCK.apply(KittyLibBlockEntryIdentifiers.CRACKED, "cracked", settings, (block, family) -> family.cracked(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> CHISELED = settings -> BASIC_BLOCK.apply(KittyLibBlockEntryIdentifiers.CHISELED, "chiseled", settings, (block, family) -> family.chiseled(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> CUT = settings -> BASIC_BLOCK.apply(KittyLibBlockEntryIdentifiers.CUT, "cut", settings, (block, family) -> family.cut(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> MOSAIC = settings -> BASIC_BLOCK.apply(KittyLibBlockEntryIdentifiers.MOSAIC, "mosaic", settings, (block, family) -> family.mosaic(block));
 
-    public static final KittyLibBlockEntry<KittyLibBlockSet> SLAB = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "slab"), (set, settings) -> new SlabBlock(settings), (block, family) -> family.slab(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> STAIRS = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "stairs"), (set, settings) -> new StairsBlock(set.getBase().getDefaultState(), settings), (block, family) -> family.stairs(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> SLAB = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.SLAB, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "slab"), (set) -> new SlabBlock(settings.apply(set)), (block, family) -> family.slab(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> STAIRS = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.STAIRS, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "stairs"), (set) -> new StairsBlock(set.getBase().getDefaultState(), settings.apply(set)), (block, family) -> family.stairs(block));
 
-    public static final KittyLibBlockEntry<KittyLibBlockSet> WALL = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "wall"), (set, settings) -> new WallBlock(settings), (block, family) -> family.wall(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> WALL = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.WALL, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "wall"), (set) -> new WallBlock(settings.apply(set)), (block, family) -> family.wall(block));
 
-    public static final KittyLibBlockEntry<KittyLibBlockSet> FENCE = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence"), (set, settings) -> new FenceBlock(settings), (block, family) -> family.fence(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> FENCE_GATE = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence_gate"), (set, settings) -> new FenceGateBlock(settings, set.createWoodType()), (block, family) -> family.fenceGate(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> FENCE = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.FENCE, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence"), (set) -> new FenceBlock(settings.apply(set)), (block, family) -> family.fence(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> FENCE_GATE = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.FENCE_GATE, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence_gate"), (set) -> new FenceGateBlock(settings.apply(set), set.createWoodType()), (block, family) -> family.fenceGate(block));
 
-    public static final KittyLibBlockEntry<KittyLibBlockSet> CUSTOM_FENCE = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence"), (set, settings) -> new FenceBlock(settings), (block, family) -> family.customFence(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> CUSTOM_FENCE_GATE = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence_gate"), (set, settings) -> new FenceGateBlock(settings, set.createWoodType()), (block, family) -> family.customFenceGate(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> CUSTOM_FENCE = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.FENCE, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence"), (set) -> new FenceBlock(settings.apply(set)), (block, family) -> family.customFence(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> CUSTOM_FENCE_GATE = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.FENCE_GATE, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "fence_gate"), (set) -> new FenceGateBlock(settings.apply(set), set.createWoodType()), (block, family) -> family.customFenceGate(block));
 
-    public static final BiFunction<Integer, Boolean, KittyLibBlockEntry<KittyLibBlockSet>> BUTTON = (pressDuration, wooden) -> new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "button"), (set, settings) -> new ButtonBlock(settings, set.getBlockSetType(), pressDuration, wooden), (block, family) -> family.button(block));
-    public static final Function<PressurePlateBlock.ActivationRule, KittyLibBlockEntry<KittyLibBlockSet>> PRESSURE_PLATE = (activationRule) -> new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "pressure_plate"), (set, settings) -> new PressurePlateBlock(activationRule, settings, set.getBlockSetType()), (block, family) -> family.pressurePlate(block));
+    public static final BiFunction<Function<KittyLibBlockSet, AbstractBlock.Settings>, Pair<Integer, Boolean>, KittyLibBlockEntry<KittyLibBlockSet>> BUTTON = (settings, buttonPair) -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.BUTTON, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "button"), (set) -> new ButtonBlock(settings.apply(set), set.getBlockSetType(), buttonPair.getLeft(), buttonPair.getRight()), (block, family) -> family.button(block));
+    public static final BiFunction<Function<KittyLibBlockSet, AbstractBlock.Settings>, PressurePlateBlock.ActivationRule, KittyLibBlockEntry<KittyLibBlockSet>> PRESSURE_PLATE = (settings, activationRule) -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.PRESSURE_PLATE, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "pressure_plate"), (set) -> new PressurePlateBlock(activationRule, settings.apply(set), set.getBlockSetType()), (block, family) -> family.pressurePlate(block));
 
-    public static final KittyLibBlockEntry<KittyLibBlockSet> DOOR = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "door"), (set, settings) -> new DoorBlock(settings, set.getBlockSetType()), (block, family) -> family.door(block));
-    public static final KittyLibBlockEntry<KittyLibBlockSet> TRAPDOOR = new KittyLibBlockEntry<>((set, name, entry) -> set.namingFunction.apply(set, entry, name, "trapdoor"), (set, settings) -> new TrapdoorBlock(settings, set.getBlockSetType()), (block, family) -> family.trapdoor(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> DOOR = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.DOOR, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "door"), (set) -> new DoorBlock(settings.apply(set), set.getBlockSetType()), (block, family) -> family.door(block));
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> TRAPDOOR = settings -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.TRAPDOOR, (set, name, entry) -> set.namingFunction.apply(set, entry, name, "trapdoor"), (set) -> new TrapdoorBlock(settings.apply(set), set.getBlockSetType()), (block, family) -> family.trapdoor(block));
 
     protected KittyLibBlockEntry<?> base;
     protected final String setName;
     protected final SetEntryNamingFunction<? super KittyLibBlockSet> namingFunction;
     protected final Function<String, Identifier> identifierFunction;
-    protected final LinkedHashMap<KittyLibBlockEntry<? extends KittyLibBlockSet>, Block> entriesMap;
+    protected final LinkedHashMap<Identifier, Pair<KittyLibBlockEntry<?>, Block>> entriesMap;
     protected final Supplier<TagKey<Block>> blockTagSupplier;
     protected final Supplier<TagKey<Item>> itemTagSupplier;
     protected BlockSetType blockSetType;
@@ -93,21 +97,13 @@ public class KittyLibBlockSet {
     }
 
     public @Nullable Block getBase() {
-        return this.entriesMap.get(base);
+        return this.entriesMap.get(KittyLibBlockEntryIdentifiers.BASE).getRight();
     }
 
-    /**
-     * First entry is set as base of the following
-     * @param settings
-     * @param entries
-     * @return
-     */
     @SafeVarargs
-    public final KittyLibBlockSet register(final AbstractBlock.Settings settings, final KittyLibBlockEntry<KittyLibBlockSet>... entries) {
+    public final KittyLibBlockSet register(final KittyLibBlockEntry<KittyLibBlockSet>... entries) {
         for (KittyLibBlockEntry<KittyLibBlockSet> entry : entries) {
-            if(base == null) base = entry;
-
-            this.entriesMap.put(entry, entry.register(this, settings));
+            this.entriesMap.put(entry.getEntryIdentifier(), new Pair(entry, entry.register(this)));
         }
 
         return this;
@@ -122,16 +118,18 @@ public class KittyLibBlockSet {
     }
      */
 
-    public Block getBlock(final KittyLibBlockEntry<KittyLibBlockSet> entry) {
-        return this.entriesMap.get(entry);
+    public Block getBlock(Identifier entryIdentifier) {
+        return this.entriesMap.get(entryIdentifier).getRight();
     }
 
     public List<Block> getAllBlocks() {
-        return this.entriesMap.values().stream().sorted(Comparator.comparingInt(Registries.BLOCK::getRawId)).toList();
+        return this.entriesMap.values().stream().map(Pair::getRight).sorted(Comparator.comparingInt(Registries.BLOCK::getRawId)).toList();
     }
 
     public BlockFamily.Builder applyBlockFamily(final BlockFamily.Builder builder) {
-        this.entriesMap.forEach((entry, block) -> {
+        this.entriesMap.forEach((entryId, pair) -> {
+            var entry = pair.getLeft();
+            var block = pair.getRight();
             entry.blockFamilyConsumer().accept(block, builder);
         });
 
@@ -176,7 +174,7 @@ public class KittyLibBlockSet {
         return identifierFunction.apply(name);
     }
 
-    public Map<KittyLibBlockEntry<? extends KittyLibBlockSet>, Block> getEntriesMap() {
+    public Map<Identifier, Pair<KittyLibBlockEntry<?>, Block>> getEntriesMap() {
         return entriesMap;
     }
 
