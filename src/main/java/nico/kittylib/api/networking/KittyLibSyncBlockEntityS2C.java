@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
@@ -13,6 +14,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nico.kittylib.KittyLibMain;
+
+import java.util.function.Predicate;
 
 public record KittyLibSyncBlockEntityS2C(BlockPos blockPos, NbtCompound data,
                                          RegistryKey<World> worldRegistryKey) implements FabricPacket {
@@ -24,10 +27,15 @@ public record KittyLibSyncBlockEntityS2C(BlockPos blockPos, NbtCompound data,
     }
 
     public static void syncToAll(BlockEntity blockEntity) {
+        syncToAll(player -> true, blockEntity);
+    }
+
+    public static void syncToAll(Predicate<PlayerEntity> predicate, BlockEntity blockEntity) {
         World world = blockEntity.getWorld();
         if (world == null || world.isClient()) return;
 
         blockEntity.getWorld().getPlayers().forEach(player -> {
+            if(!predicate.test(player)) return;
             ServerPlayNetworking.send((ServerPlayerEntity) player, new KittyLibSyncBlockEntityS2C(blockEntity.getPos(), blockEntity.createNbt(), world.getRegistryKey()));
         });
     }
