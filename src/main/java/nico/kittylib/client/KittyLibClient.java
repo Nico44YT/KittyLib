@@ -4,7 +4,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.world.World;
@@ -25,11 +24,11 @@ public class KittyLibClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(KittyLibSyncBlockEntityS2C.TYPE, (packet, player, sender) -> {
             World world = player.getWorld();
 
-            if(packet.worldRegistryKey().equals(world.getRegistryKey())) {
+            if (packet.worldRegistryKey().equals(world.getRegistryKey())) {
                 var blockEntity = world.getBlockEntity(packet.blockPos());
-                if(blockEntity != null) blockEntity.readNbt(packet.data());
+                if (blockEntity != null) blockEntity.readNbt(packet.data());
                 else {
-                    KittyLibMain.LOGGER.warn("Tried syncing block entity at {} but no block entity was found!", packet.blockPos());
+                    KittyLibMain.LOGGER.warn("Tried syncing block entity {} at {} in {} but no block entity was found!", packet.blockEntityType(), packet.blockPos(), world.getRegistryKey());
                 }
             }
         });
@@ -39,7 +38,7 @@ public class KittyLibClient implements ClientModInitializer {
             World world = player.getWorld();
             BlockState blockState = world.getBlockState(packet.pos());
 
-            if(blockState.getBlock() instanceof BlockBoundScreenProvider provider) {
+            if (blockState.getBlock() instanceof BlockBoundScreenProvider provider) {
                 Screen screen = provider.createScreen(world, packet.pos(), blockState, player);
                 MinecraftClient.getInstance().setScreen(screen);
             }

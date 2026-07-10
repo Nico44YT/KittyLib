@@ -12,10 +12,7 @@ import net.minecraft.util.Pair;
 import nico.kittylib.api.java.function.QuadFunction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -24,7 +21,7 @@ import java.util.function.Supplier;
 public class KittyLibBlockSet {
     public static final BiFunction<Function<KittyLibBlockSet, AbstractBlock.Settings>, SetEntryNamingFunction<KittyLibBlockSet>, KittyLibBlockEntry<KittyLibBlockSet>> NAMED_BASE = (settings, named) -> new KittyLibBlockEntry<>(KittyLibBlockEntryIdentifiers.BASE, (set, name, entry) -> named.apply(set, entry, name, null), (set) -> new Block(settings.apply(set)), (block, family) -> {
     });
-    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> BASE = settings -> KittyLibBlockSet.NAMED_BASE.apply(settings, null);
+    public static final Function<Function<KittyLibBlockSet, AbstractBlock.Settings>, KittyLibBlockEntry<KittyLibBlockSet>> BASE = settings -> KittyLibBlockSet.NAMED_BASE.apply(settings, (set, entry, name, additive) -> name);
 
     public static final QuadFunction<
             Identifier,
@@ -120,6 +117,10 @@ public class KittyLibBlockSet {
 
     public Block getBlock(Identifier entryIdentifier) {
         return this.entriesMap.get(entryIdentifier).getRight();
+    }
+
+    public Optional<Block> maybeGetBlock(Identifier entryIdentifier) {
+        return Optional.ofNullable(this.entriesMap.getOrDefault(entryIdentifier, new Pair<>(null, null)).getRight());
     }
 
     public List<Block> getAllBlocks() {
