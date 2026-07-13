@@ -1,6 +1,6 @@
 package nico.kittylib.mixin.entity;
 
-import nico.kittylib.api.item.ItemEntityHurtListener;
+import nico.kittylib.api.item.ItemHurtListener;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,8 +21,8 @@ public abstract class LivingEntityHurtCaller {
 
         if(source.getAttacker() instanceof PlayerEntity player) {
             lastPlayerDamage = player;
-            if(player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof ItemEntityHurtListener itemMethods) itemMethods.onEntityDamage(thisEntity, source, amount, Hand.MAIN_HAND, cir);
-            if(player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ItemEntityHurtListener itemMethods) itemMethods.onEntityDamage(thisEntity, source, amount, Hand.OFF_HAND, cir);
+            if(player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof ItemHurtListener itemMethods) itemMethods.onEntityDamage(thisEntity, source, amount, Hand.MAIN_HAND, cir);
+            if(player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ItemHurtListener itemMethods) itemMethods.onEntityDamage(thisEntity, source, amount, Hand.OFF_HAND, cir);
         }
     }
 
@@ -32,7 +32,7 @@ public abstract class LivingEntityHurtCaller {
 
         if(lastPlayerDamage == null) return;
 
-        if(lastPlayerDamage.getStackInHand(Hand.MAIN_HAND).getItem() instanceof ItemEntityHurtListener itemMethods) itemMethods.onEntityDeathDamage(thisEntity, source, amount, Hand.MAIN_HAND, cir);
-        if(lastPlayerDamage.getStackInHand(Hand.OFF_HAND).getItem() instanceof ItemEntityHurtListener itemMethods) itemMethods.onEntityDeathDamage(thisEntity, source, amount, Hand.OFF_HAND, cir);
+        if(lastPlayerDamage.getStackInHand(Hand.MAIN_HAND).getItem() instanceof ItemHurtListener itemMethods) itemMethods.onEntityDeathDamage(thisEntity, source, amount, Hand.MAIN_HAND, cir);
+        if(lastPlayerDamage.getStackInHand(Hand.OFF_HAND).getItem() instanceof ItemHurtListener itemMethods) itemMethods.onEntityDeathDamage(thisEntity, source, amount, Hand.OFF_HAND, cir);
     }
 }

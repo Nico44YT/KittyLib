@@ -1,4 +1,4 @@
-package nico.kittylib.api.util;
+package nico.kittylib.api.util.schedule;
 
 import net.minecraft.world.World;
 

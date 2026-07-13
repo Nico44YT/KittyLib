@@ -51,6 +51,20 @@ public class KittyLibRenderingUtil {
 
     }
 
+    public static void renderFaces(MatrixStack matrixStack, VertexConsumer buffer, int overlay, int light, double[]... faces) {
+        int[] defaultColor = new int[]{
+                255, 255, 255, 255
+        };
+        renderFaces(matrixStack, buffer, defaultColor, overlay, light, faces);
+    }
+
+    public static void renderFaces(MatrixStack matrixStack, VertexConsumer buffer, int overlay, int light, UVRegion uvRegion, double[]... faces) {
+        int[] defaultColor = new int[]{
+                255, 255, 255, 255
+        };
+        renderFaces(matrixStack, buffer, defaultColor, overlay, light, (float) uvRegion.minU(), (float) uvRegion.minV(), (float) uvRegion.maxU(), (float) uvRegion.maxV(), faces);
+    }
+
     public static void renderFaces(MatrixStack matrixStack, VertexConsumer buffer, int[] rgba, int overlay, int light, double[]... faces) {
         renderFaces(matrixStack, buffer, rgba, overlay, light, 0, 0, 1, 1, faces);
     }
@@ -103,7 +117,7 @@ public class KittyLibRenderingUtil {
     }
 
     public static KittyLibFace assembleFace(double[] vertexes, float[] texCoords) {
-        KittyLibTriangleData[] triangles = new KittyLibTriangleData[(vertexes.length/3) + 1];
+        KittyLibTriangleData[] triangles = new KittyLibTriangleData[(vertexes.length / 3) + 1];
 
         // Compute face normal using cross product
         double[] edge1 = new double[]{ // Subtract vertex 1 from 0
@@ -122,13 +136,13 @@ public class KittyLibRenderingUtil {
 
         for (int i = 0; i < triangles.length - 1; i++) {
             triangles[i] = new KittyLibTriangleData(
-                    new double[] {
+                    new double[]{
                             vertexes[3 * i],
                             vertexes[3 * i + 1],
                             vertexes[3 * i + 2]
                     },
                     normal,
-                    new float[] {
+                    new float[]{
                             texCoords[2 * i],
                             texCoords[2 * i + 1]
                     }

@@ -1,9 +1,9 @@
 package nico.kittylib.internal.scheduler;
 
 import net.minecraft.world.World;
-import nico.kittylib.api.util.KittyLibScheduledAction;
-import nico.kittylib.api.util.KittyLibScheduledTask;
-import nico.kittylib.api.util.KittyLibScheduler;
+import nico.kittylib.api.util.schedule.KittyLibScheduledAction;
+import nico.kittylib.api.util.schedule.KittyLibScheduledTask;
+import nico.kittylib.api.util.schedule.KittyLibScheduler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -69,7 +69,7 @@ public class VoxelShapeUtil {
         double maxY = box.maxY;
         double maxZ = box.maxZ;
 
-        return switch (rotation) {
+        return switch (rotation % 360) {
             case 90 -> VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX);
             case 180 -> VoxelShapes.cuboid(1 - maxX, minY, 1 - maxZ, 1 - minX, maxY, 1 - minZ);
             case 270 -> VoxelShapes.cuboid(minZ, minY, 1 - maxX, maxZ, maxY, 1 - minX);

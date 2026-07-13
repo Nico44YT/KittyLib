@@ -1,4 +1,4 @@
-package nico.kittylib.api.util;
+package nico.kittylib.api.util.schedule;
 
 import nico.kittylib.internal.scheduler.ImplementedScheduler;
 

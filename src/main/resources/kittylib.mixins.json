@@ -6,6 +6,7 @@
   "mixins": [
     "entity.BoatEntityMixin",
     "entity.ItemEntityMixin",
+    "entity.ItemFrameEntityMixin",
     "entity.LivingEntityHurtCaller",
     "injections.BlockMixin",
     "injections.EntityMixin",
