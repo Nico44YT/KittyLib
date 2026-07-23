@@ -66,17 +66,18 @@ public class KittyLibObjResourceLoader implements IdentifiableResourceReloadList
                 });
 
                 return libyObjModelHashMap;
-            });
+            }, prepareExecutor);
 
             return objModelMapFuture.thenCompose(synchronizer::whenPrepared).thenAcceptAsync(prepareData -> {
+                modelsMap.clear();
                 if (prepareData != null) modelsMap.putAll(prepareData);
 
                 KittyLibMain.LOGGER.info("[KittyLib-Obj] Put all obj models into the map.");
-            });
+            }, applyExecutor);
         } catch (Exception e) {
             KittyLibMain.LOGGER.error("[KittyLib-Obj] An error occurred trying to load obj models");
             e.printStackTrace();
-            return null;
+            return CompletableFuture.failedFuture(e);
         }
     }
 }

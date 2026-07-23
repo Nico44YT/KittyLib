@@ -3,11 +3,16 @@ package nico.kittylib.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import nico.kittylib.KittyLibMain;
+import nico.kittylib.api.client.renderer.obj.KittyLibObjResourceLoader;
 import nico.kittylib.api.client.screen.KittyLibScreenRegistry;
 import nico.kittylib.api.networking.KittyLibOpenScreenS2C;
 import nico.kittylib.api.networking.KittyLibSyncBlockEntityS2C;
@@ -19,6 +24,8 @@ public class KittyLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new KittyLibObjResourceLoader(KittyLibMain.id("obj_model_loader")));
+
         ClientTickEvents.END_WORLD_TICK.register(ImplementedScheduler::tick);
 
         ClientPlayNetworking.registerGlobalReceiver(KittyLibSyncBlockEntityS2C.TYPE, (packet, player, sender) -> {

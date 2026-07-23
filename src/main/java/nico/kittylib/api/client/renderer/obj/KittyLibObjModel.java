@@ -16,6 +16,10 @@ public class KittyLibObjModel {
     private final Identifier identifier;
     private final KittyLibFace[] faces;
 
+    public static Supplier<KittyLibObjModel> create(Identifier id) {
+        return () -> KittyLibObjResourceLoader.get().getMap().get(id);
+    }
+
     public KittyLibObjModel(Identifier identifier, Resource resourceFile) {
         this(identifier, KittyLibObjDeserializer.objToFaceList(resourceFile).toArray(KittyLibFace[]::new));
     }
