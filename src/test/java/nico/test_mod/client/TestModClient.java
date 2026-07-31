@@ -15,13 +15,13 @@ import java.util.function.Supplier;
 
 public class TestModClient implements ClientModInitializer {
 
-    public static final Supplier<KittyLibObjModel> MONKEY = KittyLibObjModel.get(TestMod.id("models/kitty_lib_obj/monkey.obj"));
-    public static final Identifier TEXTURE = TestMod.id("textures/block/monkey.png");
+    public static final Supplier<KittyLibObjModel> MODEL = KittyLibObjModel.get(TestMod.id("models/kitty_lib_obj/monkey.obj"));
+    public static final Identifier TEXTURE = Identifier.of("test_mod", "textures/block/monkey.png");
 
     @Override
     public void onInitializeClient() {
         WorldRenderEvents.BEFORE_ENTITIES.register((context) -> {
-            var model = MONKEY.get();
+            KittyLibObjModel model = MODEL.get();
             if (model == null) return;
 
             MatrixStack matrices = context.matrixStack();
