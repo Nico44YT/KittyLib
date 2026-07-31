@@ -5,6 +5,8 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import nico.kittylib.api.client.renderer.KittyLibFace;
 import nico.kittylib.api.client.renderer.KittyLibTriangleData;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,9 @@ import java.util.List;
 public class KittyLibObjDeserializer {
     public static List<KittyLibFace> objToFaceList(Resource resource) {
         try {
-            List<Vec3d> vertices = new ArrayList<>();
-            List<Vec3d> normals = new ArrayList<>();
-            List<Vec2f> texCoords = new ArrayList<>();
+            List<Vector3f> vertices = new ArrayList<>();
+            List<Vector3f> normals = new ArrayList<>();
+            List<Vector2f> texCoords = new ArrayList<>();
             List<KittyLibFace> faces = new ArrayList<>();
 
             List<String> lines = resource.getReader().lines().toList();
@@ -22,23 +24,23 @@ public class KittyLibObjDeserializer {
             lines.forEach(line -> {
                 String[] parts = line.split(" ");
                 if(line.startsWith("v ")) {
-                    vertices.add(new Vec3d(
-                            Double.parseDouble(parts[1]),
-                            Double.parseDouble(parts[2]),
-                            Double.parseDouble(parts[3])
+                    vertices.add(new Vector3f(
+                            Float.parseFloat(parts[1]),
+                            Float.parseFloat(parts[2]),
+                            Float.parseFloat(parts[3])
                     ));
                 }
 
                 if(line.startsWith("vn ")) {
-                    normals.add(new Vec3d(
-                            Double.parseDouble(parts[1]),
-                            Double.parseDouble(parts[2]),
-                            Double.parseDouble(parts[3])
+                    normals.add(new Vector3f(
+                            Float.parseFloat(parts[1]),
+                            Float.parseFloat(parts[2]),
+                            Float.parseFloat(parts[3])
                     ));
                 }
 
                 if(line.startsWith("vt ")) {
-                    texCoords.add(new Vec2f(Float.parseFloat(parts[1]), Float.parseFloat(parts[2])));
+                    texCoords.add(new Vector2f(Float.parseFloat(parts[1]), Float.parseFloat(parts[2])));
                 }
 
 
@@ -64,7 +66,7 @@ public class KittyLibObjDeserializer {
         }
     }
 
-    public static KittyLibTriangleData[] convertFace(String[] parts, List<Vec3d> vertices, List<Vec3d> normals, List<Vec2f> texCoords) {
+    public static KittyLibTriangleData[] convertFace(String[] parts, List<Vector3f> vertices, List<Vector3f> normals, List<Vector2f> texCoords) {
         //vertex/texCoord/normal
 
         KittyLibTriangleData[] triangleData = new KittyLibTriangleData[4];
@@ -81,9 +83,9 @@ public class KittyLibObjDeserializer {
             var texture = texCoords.get(textureIndex);
 
             triangleData[i] = new KittyLibTriangleData(
-                    new double[]{vertex.getX(), vertex.getY(), vertex.getZ()},
-                    new double[]{normal.getX(), normal.getY(), normal.getZ()},
-                    new float[]{texture.x, texture.y}
+                    new float[]{vertex.x(), vertex.y(), vertex.z()},
+                    new float[]{normal.x(), normal.y(), normal.z()},
+                    new float[]{texture.x(), texture.y()}
             );
         }
 
