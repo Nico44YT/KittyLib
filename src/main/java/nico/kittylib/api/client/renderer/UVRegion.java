@@ -1,11 +1,11 @@
 package nico.kittylib.api.client.renderer;
 
-public record UVRegion(double minU, double minV, double maxU, double maxV) {
-    public static UVRegion of(double minU, double minV, double maxU, double maxV) {
+public record UVRegion(float minU, float minV, float maxU, float maxV) {
+    public static UVRegion of(float minU, float minV, float maxU, float maxV) {
         return new UVRegion(minU, minV, maxU, maxV);
     }
 
-    public static UVRegion of(double textureSize, double startX, double startY, double endX, double endY) {
+    public static UVRegion of(float textureSize, float startX, float startY, float endX, float endY) {
         return UVRegion.of(
                 startX / textureSize,
                 startY / textureSize,
@@ -14,11 +14,11 @@ public record UVRegion(double minU, double minV, double maxU, double maxV) {
         );
     }
 
-    public static UVRegion ofSized(double textureSize, double x, double y, double sizeX, double sizeY) {
+    public static UVRegion ofSized(float textureSize, float x, float y, float sizeX, float sizeY) {
         return of(textureSize, x, y, x + sizeX, y + sizeY);
     }
 
-    public UVRegion move(double x, double y) {
+    public UVRegion move(float x, float y) {
         return UVRegion.of(
                 minU + x,
                 minV + y,
@@ -27,11 +27,11 @@ public record UVRegion(double minU, double minV, double maxU, double maxV) {
         );
     }
 
-    public UVRegion move(double textureSize, double x, double y) {
+    public UVRegion move(float textureSize, float x, float y) {
         return move(x / textureSize, y / textureSize);
     }
 
-    public UVRegion scale(double scaleX, double scaleY) {
+    public UVRegion scale(float scaleX, float scaleY) {
         return UVRegion.of(
                 minU * scaleX,
                 minV * scaleY,
@@ -40,17 +40,17 @@ public record UVRegion(double minU, double minV, double maxU, double maxV) {
         );
     }
 
-    public UVRegion scale(double textureSize, double scaleX, double scaleY) {
+    public UVRegion scale(float textureSize, float scaleX, float scaleY) {
         return scale(scaleX / textureSize, scaleY / textureSize);
     }
 
-    public UVRegion scaleFromTextureCenter(double scaleX, double scaleY) {
-        return move(0.5, 0.5).scale(scaleX, scaleY).move(-0.5, -0.5);
+    public UVRegion scaleFromTextureCenter(float scaleX, float scaleY) {
+        return move(0.5f, 0.5f).scale(scaleX, scaleY).move(-0.5f, -0.5f);
     }
 
-    public UVRegion scaleFromRegionCenter(double scaleX, double scaleY) {
-        double centerU = (minU + maxU) * 0.5;
-        double centerV = (minV + maxV) * 0.5;
+    public UVRegion scaleFromRegionCenter(float scaleX, float scaleY) {
+        float centerU = (minU + maxU) * 0.5f;
+        float centerV = (minV + maxV) * 0.5f;
 
         return UVRegion.of(
                 centerU + (minU - centerU) * scaleX,
@@ -60,7 +60,7 @@ public record UVRegion(double minU, double minV, double maxU, double maxV) {
         );
     }
 
-    public UVRegion inset(double amountX, double amountY) {
+    public UVRegion inset(float amountX, float amountY) {
         return UVRegion.of(
                 minU + amountX,
                 minV + amountY,
@@ -69,7 +69,7 @@ public record UVRegion(double minU, double minV, double maxU, double maxV) {
         );
     }
 
-    public UVRegion inset(double textureSize, double amountX, double amountY) {
+    public UVRegion inset(float textureSize, float amountX, float amountY) {
         return inset(amountX / textureSize, amountY / textureSize);
     }
 
@@ -91,20 +91,20 @@ public record UVRegion(double minU, double minV, double maxU, double maxV) {
         );
     }
 
-    public double width() {
+    public float width() {
         return maxU - minU;
     }
 
-    public double height() {
+    public float height() {
         return maxV - minV;
     }
 
-    public double centerU() {
-        return (minU + maxU) * 0.5;
+    public float centerU() {
+        return (minU + maxU) * 0.5f;
     }
 
-    public double centerV() {
-        return (minV + maxV) * 0.5;
+    public float centerV() {
+        return (minV + maxV) * 0.5f;
     }
 
     public UVRegion normalize() {

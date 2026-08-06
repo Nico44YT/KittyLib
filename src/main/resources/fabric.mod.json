@@ -9,7 +9,7 @@
   "license": "GPL-3.0",
   "icon": "assets/kittylib/icon.png",
   "environment": "*",
-  "accessWidener": "kittylib.accesswidener",
+  "accessWidener": "kittylib.classtweaker",
   "entrypoints": {
     "client": [
       "nico.kittylib.client.KittyLibClient"
@@ -25,32 +25,5 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
-  },
-  "custom": {
-    "loom:injected_interfaces": {
-      "net/minecraft/class_1297": [
-        "nico/kittylib/api/util/KittyLibIdentifierResolvable",
-        "nico/kittylib/api/util/KittyLibInjectedMethods",
-        "nico/kittylib/api/nbt/record/NbtHolder"
-      ],
-      "net/minecraft/class_1792": [
-        "nico/kittylib/api/util/KittyLibIdentifierResolvable",
-        "nico/kittylib/api/util/KittyLibInjectedMethods"
-      ],
-      "net/minecraft/class_2248": [
-        "nico/kittylib/api/util/KittyLibIdentifierResolvable",
-        "nico/kittylib/api/util/KittyLibInjectedMethods"
-      ],
-      "net/minecraft/class_2382": [
-        "nico/kittylib/api/nbt/NbtConvertible"
-      ],
-      "net/minecraft/class_1799": [
-        "nico/kittylib/api/nbt/ItemStackInjection",
-        "nico/kittylib/api/nbt/record/NbtHolder"
-      ],
-      "net/minecraft/class_2487": [
-        "nico/kittylib/api/nbt/record/NbtHolder"
-      ]
-    }
   }
 }
