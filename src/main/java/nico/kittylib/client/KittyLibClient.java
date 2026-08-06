@@ -5,26 +5,27 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import nico.kittylib.KittyLibMain;
-import nico.kittylib.api.client.renderer.obj.KittyLibObjResourceLoader;
 import nico.kittylib.api.client.screen.KittyLibScreenRegistry;
 import nico.kittylib.api.networking.KittyLibOpenScreenS2C;
 import nico.kittylib.api.networking.KittyLibSyncBlockEntityS2C;
 import nico.kittylib.api.screen.BlockBoundScreenProvider;
+import nico.kittylib.internal.client.obj.ObjResourceReloadListener;
 import nico.kittylib.internal.networking.OpenBlockBoundScreenS2C;
 import nico.kittylib.internal.scheduler.ImplementedScheduler;
 
 public class KittyLibClient implements ClientModInitializer {
 
+    public static final ObjResourceReloadListener OBJ_RESOURCE_RELOAD_LISTENER = new ObjResourceReloadListener();
+
     @Override
     public void onInitializeClient() {
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new KittyLibObjResourceLoader(KittyLibMain.id("obj_model_loader")));
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(OBJ_RESOURCE_RELOAD_LISTENER);
 
         ClientTickEvents.END_WORLD_TICK.register(ImplementedScheduler::tick);
 
@@ -35,7 +36,7 @@ public class KittyLibClient implements ClientModInitializer {
                 var blockEntity = world.getBlockEntity(packet.blockPos());
                 if (blockEntity != null) blockEntity.readNbt(packet.data());
                 else {
-                    KittyLibMain.LOGGER.warn("Tried syncing block entity {} at {} in {} but no block entity was found!", packet.blockEntityType(), packet.blockPos(), world.getRegistryKey());
+                    KittyLibMain.LOGGER.warn("Tried syncing block entity {} at {} in {} but no block entity was found!", BlockEntityType.getId(packet.blockEntityType()), packet.blockPos(), world.getRegistryKey());
                 }
             }
         });

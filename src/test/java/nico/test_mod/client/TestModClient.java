@@ -2,31 +2,31 @@ package nico.test_mod.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import nico.kittylib.api.client.renderer.obj.KittyLibObjModel;
+import nico.kittylib.api.client.renderer.obj.BakedObjModel;
+import nico.kittylib.api.client.renderer.obj.UnbakedObjModel;
 import nico.test_mod.TestMod;
 
 import java.util.function.Supplier;
 
 public class TestModClient implements ClientModInitializer {
-
-    public static final Supplier<KittyLibObjModel> MODEL = KittyLibObjModel.get(TestMod.id("models/kitty_lib_obj/monkey.obj"));
-    public static final Identifier TEXTURE = Identifier.of("test_mod", "textures/block/monkey.png");
+    public static final Supplier<BakedObjModel> BAKED_MODEL = BakedObjModel.get(TestMod.id("cube"));
+    public static final Supplier<UnbakedObjModel> UNBAKED_MODEL = UnbakedObjModel.get(TestMod.id("cube"));
+    public static final Identifier TEXTURE = Identifier.of("minecraft", "textures/block/diamond_block.png");
 
     @Override
     public void onInitializeClient() {
         WorldRenderEvents.BEFORE_ENTITIES.register((context) -> {
-            KittyLibObjModel model = MODEL.get();
-            if (model == null) return;
+            BakedObjModel bakedModel = BAKED_MODEL.get();
+            UnbakedObjModel unbakedObjModel = UNBAKED_MODEL.get();
 
             MatrixStack matrices = context.matrixStack();
-            VertexConsumerProvider consumers = context.consumers();
-
             Camera camera = context.camera();
 
             matrices.push();
@@ -38,26 +38,13 @@ public class TestModClient implements ClientModInitializer {
                     -camera.getPos().z
             );
 
-            int size = 3;
+            matrices.translate(0.5, 0, 0.5);
 
-            for(int x = 0;x<size;x++) {
-                for(int y = 0;y<size;y++) {
-                    for(int z = 0;z<size;z++) {
-                        matrices.push();
+            var layer = RenderLayer.getEntityCutout(TEXTURE);
 
-                        matrices.translate(x, y, z);
-
-                        model.render(
-                                consumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)),
-                                matrices,
-                                0xF000F0,
-                                OverlayTexture.DEFAULT_UV
-                        );
-
-                        matrices.pop();
-                    }
-                }
-            }
+            bakedModel.render(layer, matrices, 0xFF_FF_00_00);
+            matrices.translate(1, 0.5, 0);
+            unbakedObjModel.render(context.consumers().getBuffer(layer), matrices, 0xFF_FF_00_00, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 
             matrices.pop();
         });

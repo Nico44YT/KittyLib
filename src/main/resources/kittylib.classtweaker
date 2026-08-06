@@ -1,0 +1,24 @@
+classTweaker v2 named
+
+# Accessable Classes
+accessible class net/minecraft/client/render/RenderLayer$MultiPhase
+accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
+accessible class net/minecraft/client/render/RenderPhase$LineWidth
+
+# Interface Injects
+transitive-inject-interface net/minecraft/entity/Entity nico/kittylib/api/util/KittyLibIdentifierResolvable
+transitive-inject-interface net/minecraft/entity/Entity nico/kittylib/api/util/KittyLibInjectedMethods
+transitive-inject-interface net/minecraft/entity/Entity nico/kittylib/api/nbt/record/NbtHolder
+
+transitive-inject-interface net/minecraft/item/Item nico/kittylib/api/util/KittyLibIdentifierResolvable
+transitive-inject-interface net/minecraft/item/Item nico/kittylib/api/util/KittyLibInjectedMethods
+
+transitive-inject-interface net/minecraft/block/Block nico/kittylib/api/util/KittyLibIdentifierResolvable
+transitive-inject-interface net/minecraft/block/Block nico/kittylib/api/util/KittyLibInjectedMethods
+
+transitive-inject-interface net/minecraft/util/math/Vec3i nico/kittylib/api/nbt/NbtConvertible
+
+transitive-inject-interface net/minecraft/item/ItemStack nico/kittylib/api/nbt/ItemStackInjection
+transitive-inject-interface net/minecraft/item/ItemStack nico/kittylib/api/nbt/record/NbtHolder
+
+transitive-inject-interface net/minecraft/nbt/NbtCompound nico/kittylib/api/nbt/record/NbtHolder
