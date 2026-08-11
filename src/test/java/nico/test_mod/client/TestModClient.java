@@ -2,13 +2,13 @@ package nico.test_mod.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import nico.kittylib.api.client.renderer.ModelRegistrationEvent;
 import nico.kittylib.api.client.renderer.obj.BakedObjModel;
 import nico.kittylib.api.client.renderer.obj.UnbakedObjModel;
 import nico.test_mod.TestMod;
@@ -22,6 +22,18 @@ public class TestModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ModelRegistrationEvent.register(0, (ids) -> {
+
+        });
+
+        ModelRegistrationEvent.register(100, (ids) -> {
+
+        });
+
+        ModelRegistrationEvent.register(1000, (ids) -> {
+
+        });
+
         WorldRenderEvents.BEFORE_ENTITIES.register((context) -> {
             BakedObjModel bakedModel = BAKED_MODEL.get();
             UnbakedObjModel unbakedObjModel = UNBAKED_MODEL.get();

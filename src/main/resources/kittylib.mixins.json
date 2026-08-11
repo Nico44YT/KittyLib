@@ -4,6 +4,7 @@
   "package": "nico.kittylib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "client.ItemRendererMixin",
     "entity.BoatEntityMixin",
     "entity.ItemEntityMixin",
     "entity.ItemFrameEntityMixin",
@@ -21,6 +22,7 @@
   ],
   "client": [
     "client.DrawContextMixin",
+    "client.ModelLoaderMixin",
     "client.TexturedRenderLayersMixin",
     "client.TranslationStorageMixin",
     "client.accessor.RenderLayer$MultiPhaseAccessor",

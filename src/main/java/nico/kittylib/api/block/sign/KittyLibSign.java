@@ -1,12 +1,12 @@
 package nico.kittylib.api.block.sign;
 
-import nico.kittylib.api.util.KittyLibIdentifier;
 import net.minecraft.block.WoodType;
 import net.minecraft.util.Identifier;
 
 public interface KittyLibSign {
     default Identifier getTexture() {
-        KittyLibIdentifier id = KittyLibIdentifier.tryParseOrDefault(getWoodType().name(), Identifier.DEFAULT_NAMESPACE);
+        Identifier id = Identifier.tryParse(getWoodType().name());
+        if (id == null) id = Identifier.tryParse(Identifier.DEFAULT_NAMESPACE + getWoodType().name());
         return Identifier.of(id.getNamespace(), "entity/sign/" + id.getPath());
     }
 

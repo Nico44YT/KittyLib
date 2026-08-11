@@ -1,8 +1,6 @@
 package nico.kittylib.api.client.renderer;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import nico.kittylib.KittyLibMain;
 import nico.kittylib.api.client.renderer.obj.UnbakedObjModel;
@@ -68,6 +66,10 @@ public class KittyLibRenderUtil {
 
     public static void renderPlane(float x0, float z0, float x1, float z1, VertexConsumer buffer, MatrixStack matrixStack, int argb, int light, int overlay) {
         renderVertexData(x0, 0, z0, x1, 1, z1, buffer, matrixStack, argb, light, overlay, PLANE.get().vertexData());
+    }
+
+    public static void renderPlane(VertexConsumer buffer, MatrixStack matrixStack) {
+        renderPlane(buffer, matrixStack, 0xFF_FF_FF_FF, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
     }
 
     public static void renderPlane(VertexConsumer buffer, MatrixStack matrixStack, int argb, int light, int overlay) {
