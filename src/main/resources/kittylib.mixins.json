@@ -25,7 +25,6 @@
     "client.ModelLoaderMixin",
     "client.TexturedRenderLayersMixin",
     "client.TranslationStorageMixin",
-    "client.accessor.RenderLayer$MultiPhaseAccessor",
     "client.accessor.TooltipBackgroundRendererAccessor",
     "client.boat.BoatEntityRendererMixin",
     "client.cat.CatCollarFeatureRendererMixin",
