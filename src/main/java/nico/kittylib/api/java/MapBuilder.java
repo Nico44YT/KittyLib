@@ -2,6 +2,7 @@ package nico.kittylib.api.java;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class MapBuilder<K, V> {
 
@@ -17,6 +18,11 @@ public class MapBuilder<K, V> {
 
     public MapBuilder<K, V> put(K key, V value) {
         map.put(key, value);
+        return this;
+    }
+
+    public MapBuilder<K, V> put(Consumer<MapBuilder<K, V>> consumer) {
+        consumer.accept(this);
         return this;
     }
 

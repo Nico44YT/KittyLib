@@ -1,10 +1,38 @@
 package nico.kittylib.api.client.renderer;
 
+/**
+ * A region of a texture
+ *
+ * @param minU
+ * @param minV
+ * @param maxU
+ * @param maxV
+ */
 public record UVRegion(float minU, float minV, float maxU, float maxV) {
+
+    /**
+     * Creates a new UVRegion
+     *
+     * @param minU
+     * @param minV
+     * @param maxU
+     * @param maxV
+     * @return
+     */
     public static UVRegion of(float minU, float minV, float maxU, float maxV) {
         return new UVRegion(minU, minV, maxU, maxV);
     }
 
+    /**
+     * Creates a new UVRegion with a texture size, the coordinates will get divided by the texture size to achieve a normalization.
+     *
+     * @param textureSize
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
     public static UVRegion of(float textureSize, float startX, float startY, float endX, float endY) {
         return UVRegion.of(
                 startX / textureSize,
