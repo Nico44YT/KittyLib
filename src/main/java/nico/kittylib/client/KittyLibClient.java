@@ -15,6 +15,7 @@ import nico.kittylib.api.client.screen.KittyLibScreenRegistry;
 import nico.kittylib.api.networking.KittyLibOpenScreenS2C;
 import nico.kittylib.api.networking.KittyLibSyncBlockEntityS2C;
 import nico.kittylib.api.screen.BlockBoundScreenProvider;
+import nico.kittylib.internal.client.InternalRenderLayers;
 import nico.kittylib.internal.client.obj.ObjResourceReloadListener;
 import nico.kittylib.internal.networking.OpenBlockBoundScreenS2C;
 import nico.kittylib.internal.scheduler.ImplementedScheduler;
@@ -56,5 +57,7 @@ public class KittyLibClient implements ClientModInitializer {
             Screen screen = KittyLibScreenRegistry.getScreen(packet.screenId(), packet.additionalData());
             MinecraftClient.getInstance().setScreen(screen);
         });
+
+        InternalRenderLayers.init();
     }
 }

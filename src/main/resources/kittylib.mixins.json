@@ -4,10 +4,12 @@
   "package": "nico.kittylib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "client.ItemRendererMixin",
     "entity.BoatEntityMixin",
     "entity.ItemEntityMixin",
     "entity.ItemFrameEntityMixin",
     "entity.LivingEntityHurtCaller",
+    "injections.BannerPatternMixin",
     "injections.BlockMixin",
     "injections.EntityMixin",
     "injections.ItemMixin",
@@ -21,9 +23,9 @@
   ],
   "client": [
     "client.DrawContextMixin",
+    "client.ModelLoaderMixin",
     "client.TexturedRenderLayersMixin",
     "client.TranslationStorageMixin",
-    "client.accessor.RenderLayer$MultiPhaseAccessor",
     "client.accessor.TooltipBackgroundRendererAccessor",
     "client.boat.BoatEntityRendererMixin",
     "client.cat.CatCollarFeatureRendererMixin",
