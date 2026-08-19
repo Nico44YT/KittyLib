@@ -4,6 +4,9 @@ classTweaker v2 named
 accessible class net/minecraft/client/render/RenderLayer$MultiPhase
 accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
 accessible class net/minecraft/client/render/RenderPhase$LineWidth
+accessible class net/minecraft/client/render/RenderPhase$Texture
+accessible class net/minecraft/client/render/RenderPhase$Textures
+accessible class net/minecraft/client/render/RenderPhase$ShaderProgram
 
 # Interface Injects
 transitive-inject-interface net/minecraft/entity/Entity nico/kittylib/api/util/KittyLibIdentifierResolvable
@@ -22,3 +25,5 @@ transitive-inject-interface net/minecraft/item/ItemStack nico/kittylib/api/nbt/I
 transitive-inject-interface net/minecraft/item/ItemStack nico/kittylib/api/nbt/record/NbtHolder
 
 transitive-inject-interface net/minecraft/nbt/NbtCompound nico/kittylib/api/nbt/record/NbtHolder
+
+transitive-inject-interface net/minecraft/block/entity/BannerPattern nico/kittylib/api/util/KittyLibIdentifierResolvable

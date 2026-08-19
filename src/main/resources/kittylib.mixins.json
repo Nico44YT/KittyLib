@@ -9,6 +9,7 @@
     "entity.ItemEntityMixin",
     "entity.ItemFrameEntityMixin",
     "entity.LivingEntityHurtCaller",
+    "injections.BannerPatternMixin",
     "injections.BlockMixin",
     "injections.EntityMixin",
     "injections.ItemMixin",

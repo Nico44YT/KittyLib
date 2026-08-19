@@ -4,6 +4,6 @@ import net.minecraft.util.Identifier;
 
 public interface KittyLibIdentifierResolvable {
     default Identifier kittylib$getId() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

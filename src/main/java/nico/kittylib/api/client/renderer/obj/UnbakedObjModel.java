@@ -1,9 +1,11 @@
 package nico.kittylib.api.client.renderer.obj;
 
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import nico.kittylib.api.client.renderer.KittyLibRenderUtil;
+import nico.kittylib.internal.client.InternalRenderLayers;
 import nico.kittylib.internal.client.obj.ObjResourceReloadListener;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -17,6 +19,18 @@ public record UnbakedObjModel(Identifier id, float[] vertexData) {
         var normalMatrix = matrixStack.peek().getNormalMatrix();
 
         this.render(buffer, positionMatrix, normalMatrix, argb, light, overlay);
+    }
+
+    public void render(VertexConsumerProvider consumerProvider, Identifier texture, Identifier normalTexture, MatrixStack matrixStack, int argb, int light, int overlay) {
+        var positionMatrix = matrixStack.peek().getPositionMatrix();
+        var normalMatrix = matrixStack.peek().getNormalMatrix();
+
+        render(consumerProvider, texture, normalTexture, positionMatrix, normalMatrix, argb, light, overlay);
+    }
+
+    public void render(VertexConsumerProvider consumerProvider, Identifier texture, Identifier normalTexture, Matrix4f positionMatrix, Matrix3f normalMatrix, int argb, int light, int overlay) {
+        var buffer = consumerProvider.getBuffer(InternalRenderLayers.getTexturedNormal(texture, normalTexture));
+        KittyLibRenderUtil.renderVertexData(buffer, positionMatrix, normalMatrix, argb, light, overlay, this.vertexData);
     }
 
     public void render(VertexConsumer buffer, Matrix4f positionMatrix, Matrix3f normalMatrix, int argb, int light, int overlay) {

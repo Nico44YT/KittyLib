@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.util.Identifier;
+import nico.kittylib.internal.client.InternalRenderLayers;
 import nico.kittylib.internal.command.KittyLibInternalCommands;
 import nico.kittylib.internal.scheduler.ImplementedScheduler;
 import org.slf4j.Logger;

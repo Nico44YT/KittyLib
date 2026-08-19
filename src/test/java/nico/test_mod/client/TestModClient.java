@@ -5,37 +5,26 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.dimension.DimensionTypes;
 import nico.kittylib.api.client.renderer.ModelRegistrationEvent;
-import nico.kittylib.api.client.renderer.obj.BakedObjModel;
 import nico.kittylib.api.client.renderer.obj.UnbakedObjModel;
 import nico.test_mod.TestMod;
 
 import java.util.function.Supplier;
 
 public class TestModClient implements ClientModInitializer {
-    public static final Supplier<BakedObjModel> BAKED_MODEL = BakedObjModel.get(TestMod.id("cube"));
     public static final Supplier<UnbakedObjModel> UNBAKED_MODEL = UnbakedObjModel.get(TestMod.id("cube"));
-    public static final Identifier TEXTURE = Identifier.of("minecraft", "textures/block/diamond_block.png");
+    public static final Identifier TEXTURE = Identifier.of("test_mod", "textures/block/cube.png");
+    public static final Identifier TEXTURE_NORMAL = Identifier.of("test_mod", "textures/block/cube_n.png");
 
     @Override
     public void onInitializeClient() {
-        ModelRegistrationEvent.register(0, (ids) -> {
-
-        });
-
-        ModelRegistrationEvent.register(100, (ids) -> {
-
-        });
-
-        ModelRegistrationEvent.register(1000, (ids) -> {
-
-        });
-
         WorldRenderEvents.BEFORE_ENTITIES.register((context) -> {
-            BakedObjModel bakedModel = BAKED_MODEL.get();
             UnbakedObjModel unbakedObjModel = UNBAKED_MODEL.get();
 
             MatrixStack matrices = context.matrixStack();
@@ -52,11 +41,11 @@ public class TestModClient implements ClientModInitializer {
 
             matrices.translate(0.5, 0, 0.5);
 
-            var layer = RenderLayer.getEntityCutout(TEXTURE);
-
-            bakedModel.render(layer, matrices, 0xFF_FF_00_00);
-            matrices.translate(1, 0.5, 0);
-            unbakedObjModel.render(context.consumers().getBuffer(layer), matrices, 0xFF_FF_00_00, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+            unbakedObjModel.render(context.consumers(), TEXTURE, TEXTURE_NORMAL,
+                    matrices, 0xFF_FF_FF_FF,
+                    WorldRenderer.getLightmapCoordinates(context.world(), BlockPos.ORIGIN),
+                    OverlayTexture.DEFAULT_UV
+            );
 
             matrices.pop();
         });
