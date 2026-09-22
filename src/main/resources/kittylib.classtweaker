@@ -30,4 +30,4 @@ transitive-inject-interface net/minecraft/block/entity/BannerPattern nico/kittyl
 
 transitive-inject-interface net/minecraft/client/render/model/json/Transformation nico/kittylib/internal/client/injections/JsonModelTransformationInjections
 
-transitive-inject-interface net/minecraft/block/Block nico/kittylib/api/block/ColoredBlock
+transitive-inject-interface net/minecraft/block/Block nico/kittylib/api/color/DyeColored
