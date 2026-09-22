@@ -27,3 +27,7 @@ transitive-inject-interface net/minecraft/item/ItemStack nico/kittylib/api/nbt/r
 transitive-inject-interface net/minecraft/nbt/NbtCompound nico/kittylib/api/nbt/record/NbtHolder
 
 transitive-inject-interface net/minecraft/block/entity/BannerPattern nico/kittylib/api/util/KittyLibIdentifierResolvable
+
+transitive-inject-interface net/minecraft/client/render/model/json/Transformation nico/kittylib/internal/client/injections/JsonModelTransformationInjections
+
+transitive-inject-interface net/minecraft/block/Block nico/kittylib/api/color/DyeColored

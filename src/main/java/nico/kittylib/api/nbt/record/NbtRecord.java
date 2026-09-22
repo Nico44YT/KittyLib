@@ -146,6 +146,7 @@ public class NbtRecord<T> {
     }
 
     protected static <T> T read(NbtCompound nbt, NbtRecord<T> record) {
+        if(!nbt.contains(record.key)) return null;
         return record.typeHandler.read(nbt, record.key);
     }
     //endregion
