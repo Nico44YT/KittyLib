@@ -3,17 +3,16 @@ package nico.test_mod.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionTypes;
-import nico.kittylib.api.client.renderer.ModelRegistrationEvent;
+import nico.kittylib.api.client.renderer.item.KittyLibTooltipRendererRegistry;
 import nico.kittylib.api.client.renderer.obj.UnbakedObjModel;
 import nico.test_mod.TestMod;
+import nico.test_mod.client.tooltip.TestTooltipRenderer;
+import nico.test_mod.item.ModItems;
 
 import java.util.function.Supplier;
 
@@ -49,5 +48,7 @@ public class TestModClient implements ClientModInitializer {
 
             matrices.pop();
         });
+
+        KittyLibTooltipRendererRegistry.getInstance().registerTooltipRenderer(ModItems.TOOLTIP_TEST, TestTooltipRenderer::new);
     }
 }

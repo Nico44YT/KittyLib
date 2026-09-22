@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.CLIENT)
-public class KittyLibFontProvider implements DataProvider {
+public abstract class KittyLibFontProvider implements DataProvider {
     protected final DataOutput.PathResolver fontFolderPathResolver;
     protected final String id;
     protected final Map<Identifier, JsonObject> fontFiles;
@@ -32,11 +32,6 @@ public class KittyLibFontProvider implements DataProvider {
         }).toArray(CompletableFuture[]::new);
 
         return CompletableFuture.allOf(array);
-    }
-
-    @Override
-    public String getName() {
-        return "kittylib:font/" + id;
     }
 
     public static class FontFileBuilder {
